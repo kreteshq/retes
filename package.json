@@ -1,0 +1,24 @@
+{
+  "name": "retes",
+  "version": "0.0.1",
+  "description": "Typed, Declarative, Data-Driven Routing for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava",
+    "test-watch": "ava --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "busboy": "^0.3.1",
+    "debug": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/busboy": "^0.2.3",
+    "@types/debug": "^4.1.5",
+    "@types/node": "^14.14.5",
+    "ava": "^3.13.0",
+    "axios": "^0.21.0",
+    "form-data": "^3.0.0"
+  }
+}
