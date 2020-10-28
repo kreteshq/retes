@@ -2,7 +2,8 @@
   "name": "retes",
   "version": "0.1.0",
   "description": "Typed, Declarative, Data-Driven Routing for Node.js",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "watch": "tsc -w",
     "build": "tsc",
