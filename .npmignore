@@ -1,3 +1,4 @@
 src/
-*.ts
+test.ts
+bare.ts
 *.tgz
