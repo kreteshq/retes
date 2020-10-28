@@ -43,11 +43,11 @@ const Route = {
 };
 
 const Response = {
-  OK(body: ResponseBody, headers = {}) {
-    return { headers, body, statusCode: 200 } as Response;
+  OK(body: ResponseBody, headers = {}): Response {
+    return { headers, body, statusCode: 200 };
   },
 
-  Created(resource: Resource = '', headers = {}) {
+  Created(resource: Resource = '', headers = {}): Response {
     return {
       statusCode: 201,
       headers,
@@ -55,10 +55,77 @@ const Response = {
     };
   },
 
-  HTMLString(content: string) {
+  Accepted(resource: Resource = '', headers = {}): Response {
+    return {
+      statusCode: 202,
+      headers,
+      body: resource
+    };
+  },
+
+  NoContent(headers = {}): Response {
+    return {
+      statusCode: 204,
+      headers,
+      body: '',
+    };
+  },
+
+  Redirect(url: string, body = 'Redirecting...', statusCode = 302): Response {
+    return {
+      statusCode,
+      headers: { Location: url },
+      type: 'text/plain',
+      body,
+    };
+  },
+
+  NotModified(headers = {}): Response {
+    return {
+      statusCode: 304,
+      headers,
+      body: '',
+    };
+  },
+
+  JSONPayload(content, statusCode = 200) {
+    return {
+      statusCode,
+      body: JSON.stringify(content),
+      type: 'application/json',
+    };
+  },
+
+  HTMLString(content: string): Response {
     return {
       statusCode: 200,
       type: 'text/html',
+      body: content,
+    };
+  },
+
+  HTMLStream(content): Response {
+    const Readable = require('stream').Readable;
+
+    const s = new Readable();
+    s.push(content);
+    s.push(null);
+
+    return s;
+  },
+
+  JavaScriptString(content: string): Response {
+    return {
+      statusCode: 200,
+      type: 'application/javascript',
+      body: content,
+    };
+  },
+
+  StyleSheetString(content: string): Response {
+    return {
+      statusCode: 200,
+      type: 'text/css',
       body: content,
     };
   },
@@ -69,6 +136,30 @@ const Response = {
       type: 'text/html',
       headers,
       body: "Not Found"
+    };
+  },
+
+  Unauthorized(): Response {
+    return {
+      statusCode: 401,
+      headers: {
+        'WWW-Authenticate': 'Basic realm=Authorization Required'
+      },
+      body: ''
+    };
+  },
+
+  Forbidden(content: string = ''): Response {
+    return {
+      statusCode: 403,
+      body: content
+    };
+  },
+
+  InternalServerError(content: string = ''): Response {
+    return {
+      statusCode: 500,
+      body: content
     };
   }
 }
@@ -179,7 +270,7 @@ export class App {
     return new Promise((resolve, reject) => {
       this.server?.close((err) => {
         if (err) return reject(err);
-        resolve();
+        resolve('Stopped');
       })
     })
   }
