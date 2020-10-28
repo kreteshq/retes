@@ -8,6 +8,7 @@ devDependencies:
   ava: 3.13.0
   axios: 0.21.0
   form-data: 3.0.0
+  typescript: 4.1.0-beta
 lockfileVersion: 5.2
 packages:
   /@babel/code-frame/7.10.4:
@@ -1956,6 +1957,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==
+  /typescript/4.1.0-beta:
+    dev: true
+    engines:
+      node: '>=4.2.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-b/LAttdVl3G6FEmnMkDsK0xvfvaftXpSKrjXn+OVCRqrwz5WD/6QJOiN+dTorqDY+hkaH+r2gP5wI1jBDmdQ7A==
   /unique-string/2.0.0:
     dependencies:
       crypto-random-string: 2.0.0
@@ -2083,3 +2091,4 @@ specifiers:
   busboy: ^0.3.1
   debug: ^4.2.0
   form-data: ^3.0.0
+  typescript: ^4.1.0-beta

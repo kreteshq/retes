@@ -19,7 +19,6 @@ import {
 import { Router } from './router';
 import { Context, KeyValue, Middleware, Next, Params, Response } from './types';
 
-
 export const Routing = (router: Router, options = {}): Middleware => {
   return async (context: Context, next: Next): Promise<Response> => {
     const method = context.request.method;
