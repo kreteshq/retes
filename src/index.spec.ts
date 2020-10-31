@@ -2,7 +2,7 @@ import test from 'ava';
 import axios from 'axios';
 import FormData from 'form-data';
 
-import { Route, Response, App } from '.';
+import { Route, Response, ServerApp } from '.';
 import { Next, Request } from './types';
 
 const { before, after } = test;
@@ -67,7 +67,7 @@ let http;
 let server;
 
 before(async () => {
-  server = new App(routes);
+  server = new ServerApp(routes);
   await server.start();
 
   http = axios.create({ baseURL: `http://localhost:${server.port}` });

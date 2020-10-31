@@ -8,7 +8,7 @@ import http from 'http';
 import { AddressInfo } from 'net';
 import { Router } from './router';
 
-import { Handler, RouteOptions, Route, Response, ResponseBody, Resource, Routes, Context, RoutePaths, Middleware, Request, LocalMiddleware } from './types';
+import { Handler, RouteOptions, Route, Response, CompoundResponse, ResponseBody, Resource, Routes, Context, RoutePaths, Middleware, Request, LocalMiddleware } from './types';
 import { handle } from './core';
 import { Routing } from './routing';
 import { compose } from './util';
@@ -39,7 +39,7 @@ const Route = {
   },
   DELETE(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
     return [path, { DELETE: handler, middleware, meta }]
-  },
+  }
 };
 
 const Response = {
@@ -185,16 +185,38 @@ class Base extends Array {
   }
 }
 
-export class App {
+export class ServerApp {
   server: http.Server | undefined;
   router: Router;
   middlewares: Base;
   routes: Routes;
+  routePaths: Object
 
   constructor(routes: Routes) {
     this.middlewares = new Base();
     this.router = new Router();
     this.routes = routes;
+    this.routePaths = {};
+
+    // TODO move it to `start` once it's abstracted
+    for (const [path, params] of this.routes) {
+      const { middleware = [], meta = {} } = params;
+      const { summary = path } = meta;
+
+      for (let [method, handler] of Object.entries(params)) {
+        if (method in HTTPMethod) {
+          this.routePaths[path] = {}
+          this.routePaths[path][method.toLowerCase()] = {
+            ...meta,
+            summary,
+          };
+
+          const flow = middleware.concat(handler);
+          this.add(method as HTTPMethod, path, ...flow);
+        }
+        // else: a key name undefined in the spec -> discarding
+      }
+    }
   }
 
   use(middleware: Middleware | Promise<Middleware>) {
@@ -216,26 +238,6 @@ export class App {
   }
 
   async start(port: number = 0) {
-    const routePaths: RoutePaths = {};
-
-    for (const [path, params] of this.routes) {
-      const { middleware = [], meta = {} } = params;
-      const { summary = path } = meta;
-
-      for (let [method, handler] of Object.entries(params)) {
-        if (method in HTTPMethod) {
-          routePaths[path] = {}
-          routePaths[path][method.toLowerCase()] = {
-            ...meta,
-            summary,
-          };
-
-          const flow = middleware.concat(handler);
-          this.add(method as HTTPMethod, path, ...flow);
-        }
-        // else: a key name undefined in the spec -> discarding
-      }
-    }
 
     this.use(Routing(this.router));
 
@@ -284,6 +286,12 @@ export class App {
 export {
   Route,
   Routes,
-  Response
+  Response,
+  CompoundResponse,
+  Resource,
+  ResponseBody,
+  Request,
+  Handler,
+  handle,
 }
 

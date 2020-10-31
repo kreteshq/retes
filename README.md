@@ -23,7 +23,7 @@ Retes is a routing library for Node.js written in TypeScript and inspired by Clo
 ## Usage
 
 ```ts
-import { Route, App, Response } from 'retes';
+import { Route, ServerApp, Response } from 'retes';
 
 const { GET, POST } = Route;
 const { Created } = Response;

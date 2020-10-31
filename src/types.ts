@@ -29,14 +29,16 @@ export interface Request {
 export type ResponseBody = string | object;
 export type Resource = ResponseBody | undefined;
 
+export interface CompoundResponse {
+  body: ResponseBody
+  statusCode: number
+  headers?: object
+  type?: string
+}
+
 export type Response =
   | string
-  | {
-      body: ResponseBody,
-      statusCode: number,
-      headers?: object
-      type?: string
-    }
+  | CompoundResponse
   | Buffer
   | ReadStream;
 
