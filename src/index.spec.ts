@@ -1,3 +1,4 @@
+/*
 import test from 'ava';
 import axios from 'axios';
 import FormData from 'form-data';

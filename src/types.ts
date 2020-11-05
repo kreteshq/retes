@@ -5,10 +5,16 @@ export interface Params {
   [name: string]: any
 }
 
+export type InferRouteParams<T extends string> =
+  string extends T ? Record<string, string> :
+  T extends `${infer _}:${infer Param}/${infer Rest}` ? {[k in Param | keyof InferRouteParams<Rest>]: string} :
+  T extends `${infer _}:${infer Param}` ? {[k in Param]: string} :
+  Params;
+
 export type Next = (request?: Request) => Response | Promise<Response>;
 
-export interface Request {
-  params: Params
+export interface Request<RoutePath extends string = ""> {
+  params: InferRouteParams<RoutePath>
   headers?: {
     [name: string]: any
   },
@@ -42,7 +48,7 @@ export type Response =
   | Buffer
   | ReadStream;
 
-export type Handler = (request: Request) => Response | Promise<Response>;
+export type Handler<RoutePath extends string = ""> = (request: Request<RoutePath>) => Response | Promise<Response>;
 
 export interface Meta {
   summary?: string
@@ -69,8 +75,8 @@ export interface RouteOptions {
   meta?: Meta
 }
 
-interface RouteParams {
-  GET?: Handler
+interface RouteParams<R extends string> {
+  GET?: Handler<R>
   POST?: Handler
   PUT?: Handler
   PATCH?: Handler
@@ -79,9 +85,9 @@ interface RouteParams {
   meta?: Meta
 }
 
-export type Route = [string, RouteParams, Route?];
+export type Route<R extends string = ""> = [string, RouteParams<R>, Route<R>?];
 
-export type Routes = Route[]
+export type Routes<R extends string = ""> = Route<R>[]
 
 export interface Context {
   request: http.IncomingMessage

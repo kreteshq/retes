@@ -8,7 +8,7 @@ import http from 'http';
 import { AddressInfo } from 'net';
 import { Router } from './router';
 
-import { Handler, RouteOptions, Route, Response, CompoundResponse, ResponseBody, Resource, Routes, Context, RoutePaths, Middleware, Request, LocalMiddleware } from './types';
+import { Handler, RouteOptions, Route, Response, CompoundResponse, ResponseBody, Resource, Routes, Context, Middleware, Request, LocalMiddleware } from './types';
 import { handle } from './core';
 import { Routing } from './routing';
 import { compose } from './util';
@@ -25,21 +25,21 @@ export const HTTPMethod = {
 export type HTTPMethod = (typeof HTTPMethod)[keyof typeof HTTPMethod];
 
 const Route = {
-  GET(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
+  GET<RoutePath extends string>(path: RoutePath, handler: Handler<RoutePath>, { middleware = [], meta = {}}: RouteOptions = {}): Route<RoutePath> {
     return [path, { GET: handler, middleware, meta }]
   },
-  POST(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
-    return [path, { POST: handler, middleware, meta }]
-  },
-  PATCH(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
-    return [path, { PATCH: handler, middleware, meta }]
-  },
-  PUT(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
-    return [path, { PUT: handler, middleware, meta }]
-  },
-  DELETE(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
-    return [path, { DELETE: handler, middleware, meta }]
-  }
+  // POST(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
+  //   return [path, { POST: handler, middleware, meta }]
+  // },
+  // PATCH(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
+  //   return [path, { PATCH: handler, middleware, meta }]
+  // },
+  // PUT(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
+  //   return [path, { PUT: handler, middleware, meta }]
+  // },
+  // DELETE(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
+  //   return [path, { DELETE: handler, middleware, meta }]
+  // }
 };
 
 const Response = {
