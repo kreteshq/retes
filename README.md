@@ -52,3 +52,8 @@ main()
 ```
 
 ## Benchmarks
+
+
+## Roadmap
+
+- [ ] infer types for dynamic segments from routes using the string literals feature from TypeScript 4.1 (in progress #1)
