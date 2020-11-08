@@ -51,6 +51,34 @@ async function main() {
 main()
 ```
 
+## Features
+
+### Middleware Composition on Per-Route Basis
+
+```ts
+import { Route, ServerApp } from 'retes';
+
+const { GET } = Route;
+
+const prepend = next => request => `prepend - ${next()}`;
+const append = next => request => `${next()} - append`
+
+const routes = [
+  GET("/middleware", () => "Hello, Middlewares", {
+    middleware: [prepend, append]
+  }) // equivalent to: prepend(append(handler))
+]
+
+async function main() {
+  const app = new App(routes);
+  await app.start(3000);
+
+  console.log('started')
+}
+
+main()
+```
+
 ## Benchmarks
 
 
