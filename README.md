@@ -8,7 +8,7 @@ Retes is a routing library for Node.js written in TypeScript and inspired by Clo
 
 - **Data-Driven:** In Retes you define routes using the existing data structures. This way, we limit the number of abstractions and we are able to easily transform and combine routes. Our routing description is declarative.
 - **Typed:** The type system conveniently helps us control the shape of our routing
-- **Battery-Included (wip):**
+- **Battery-Included (wip):** Most common middlewares will be included out of the box
 
 ## Highlights
 
