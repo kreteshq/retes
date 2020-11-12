@@ -1,5 +1,5 @@
 import test from 'ava';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import FormData from 'form-data';
 
 import { Route, Response, ServerApp } from '.';
@@ -63,8 +63,8 @@ const routes = [].concat(GETs, POSTs, PUTs, DELETEs, Compositions);
 // B E F O R E  &  A F T E R
 //
 
-let http;
-let server;
+let http: AxiosInstance;
+let server: ServerApp;
 
 before(async () => {
   server = new ServerApp(routes);
