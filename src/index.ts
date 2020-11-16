@@ -12,6 +12,7 @@ import { Handler, RouteOptions, Route, Response, CompoundResponse, ResponseBody,
 import { handle } from './core';
 import { Routing } from './routing';
 import { compose } from './util';
+import { getServerStopFunc } from './graceful-stop';
 
 export const HTTPMethod = {
   GET: 'GET',
@@ -190,13 +191,15 @@ export class ServerApp {
   router: Router;
   middlewares: Base;
   routes: Routes;
-  routePaths: Object
+  routePaths: Object;
+  stop: () => Promise<void>;
 
   constructor(routes: Routes) {
     this.middlewares = new Base();
     this.router = new Router();
     this.routes = routes;
     this.routePaths = {};
+    this.stop = () => Promise.reject(`You should start the server first`);
 
     // TODO move it to `start` once it's abstracted
     for (const [path, params] of this.routes) {
@@ -263,17 +266,9 @@ export class ServerApp {
 
     return new Promise<http.Server>((resolve, reject) => {
       this.server?.listen(port, () => {
+        this.stop = getServerStopFunc(this.server);
         resolve(this.server);
       });
-    })
-  }
-
-  async stop() {
-    return new Promise((resolve, reject) => {
-      this.server?.close((err) => {
-        if (err) return reject(err);
-        resolve('Stopped');
-      })
     })
   }
 
