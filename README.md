@@ -43,7 +43,7 @@ const routes = [
 ]
 
 async function main() {
-  const app = new App(routes);
+  const app = new ServerApp(routes);
   await app.start(3000);
 
   console.log('started')
@@ -78,7 +78,7 @@ const routes = [
 ]
 
 async function main() {
-  const app = new App(routes);
+  const app = new ServerApp(routes);
   await app.start(3000);
 
   console.log('started')
@@ -104,7 +104,7 @@ const routes = [
 ]
 
 async function main() {
-  const app = new App(routes);
+  const app = new ServerApp(routes);
   await app.start(3000);
 
   console.log('started')
