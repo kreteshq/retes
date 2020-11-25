@@ -290,3 +290,5 @@ export {
   handle,
 }
 
+export * as Middleware from './middleware';
+

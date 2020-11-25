@@ -152,6 +152,34 @@ async function main() {
 main()
 ```
 
+### Declarative Validation
+
+```tsx
+import { Route, ServerApp, Middleware } from 'retes';
+import * as z from 'zod';
+
+const { GET } = Route;
+
+const schema = z.object({
+  name: z.string()
+});
+
+const routes = [
+  GET('/request-validation', ({ params }) => {
+    return `The request for this handler is validated using the given schema`,
+  }, { middleware: [ Middleware.Validation(schema) ] }))
+]
+
+async function main() {
+  const app = new ServerApp(routes);
+  await app.start(3000);
+
+  console.log('started')
+}
+
+main()
+```
+
 ## Benchmarks
 
 WIP

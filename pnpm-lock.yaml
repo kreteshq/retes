@@ -1,6 +1,7 @@
 dependencies:
   busboy: 0.3.1
   debug: 4.3.1
+  zod: 2.0.0-beta.22
 devDependencies:
   '@types/busboy': 0.2.3
   '@types/debug': 4.1.5
@@ -2082,6 +2083,10 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-hAD1RcFP/wfgfxgMVswPE+z3tlPFtxG8/yWUrG2i17sTWGCGqWnxKcLTF4cUKDUK8fzokwsmO9H0TDkRbMHy8w==
+  /zod/2.0.0-beta.22:
+    dev: false
+    resolution:
+      integrity: sha512-A0UldVo1gA8OkXrVv6AuVPMiyGD2wPFc0iTIsK/DSavFNKke6Cgp1VwqaeM/FY1cui5t8I46iqsKNxUPHjIlpQ==
 specifiers:
   '@types/busboy': ^0.2.3
   '@types/debug': ^4.1.5
@@ -2092,3 +2097,4 @@ specifiers:
   debug: ^4.3.1
   form-data: ^3.0.0
   typescript: 4.1.2
+  zod: ^2.0.0-beta.22
