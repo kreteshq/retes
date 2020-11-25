@@ -10,7 +10,7 @@ Retes is a routing library for Node.js written in TypeScript and inspired by Clo
 - **Typed:** The type system conveniently helps us control the shape of our routing
 - **Battery-Included (wip):** Most common middlewares will be included out of the box
 
-## Highlights
+## Key Features
 
 * built-in parsing of query params, body and route's dynamic segments
 * built-in file uploading handling mechansim
@@ -19,9 +19,40 @@ Retes is a routing library for Node.js written in TypeScript and inspired by Clo
 * middlewares can be combined on per-route basis
 * an HTTP response is just an object containing at least `statusCode` and `body` keys
 
-(wip)
+## Why Retes?
+
+* declarative route descriptions make them easily composable
+* functional handlers are more natural fit for the HTTP flow
+* common request/response transformations are already built-in
+* typed routes make it easier to discover and control the shape of data flowing in and out
 
 ## Usage
+
+Generate a new Node.js project
+
+```
+mkdir my-api
+cd my-api
+npm init -y
+```
+
+Add `retes` as a dependency
+
+```
+npm i retes
+```
+
+Create `tsconfig.json` with the following content:
+
+```
+{
+  "compilerOptions": {
+    "lib": [ "es2015", "DOM" ]
+  }
+}
+```
+
+Create `app.ts` with the following content:
 
 ```ts
 import { Route, ServerApp, Response } from 'retes';
@@ -53,6 +84,14 @@ main()
 ```
 
 Save it to a file, e.g. `app.ts` and run using ts-node
+
+Install `ts-node` globally
+
+```
+npm i -g ts-node
+```
+
+Run the application
 
 ```
 ts-node app.ts
