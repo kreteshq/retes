@@ -14,7 +14,7 @@ export const Validating = (schema: z.ZodSchema<unknown>, options?: ParseParams) 
     const result = await schema.safeParseAsync(params, options);
 
     if (result.success === false) {
-      return JSONPayload(result.error, 422);
+      return JSONPayload(result.error, 400);
     } else {
       return next(request);
     }
