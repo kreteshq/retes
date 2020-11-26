@@ -101,12 +101,106 @@ The server application listens on the specified port, in our case `:3000`. Open 
 
 ## Features
 
+### Params
+
+Retes combines requests' query params, body params and segment params into `params`.
+
+```ts
+import { Route, ServerApp, Response } from 'retes';
+
+const { GET, POST } = Route;
+const { OK } = Response;
+
+const routes = [
+  GET("/query-params", ({ params }) => OK(params)),
+  POST("/body-form", ({ params }) => OK(params)),
+  POST("/body-json", () => OK(params)),
+  GET("/segment/:a/:b", ({ params }) => OK(params)),
+]
+
+async function main() {
+  const app = new ServerApp(routes);
+  await app.start(3000);
+
+  console.log('started')
+}
+
+main()
+```
+
+This `GET` query
+
+```
+http :3000/query-params?a=1&b=2
+```
+
+returns
+
+```http
+HTTP/1.1 200 OK
+
+{
+    "a": "1",
+    "b": "2"
+}
+```
+
+This `POST` query with `Content-Type` set to `application/x-www-form-urlencoded; charset=utf-8`
+
+```
+http --form :3000/body-form a:=1 b:=2
+```
+
+returns
+
+```http
+HTTP/1.1 200 OK
+
+{
+    "a": "1",
+    "b": "2"
+}
+```
+
+This `POST` query with `Content-Type` set to `application/json`
+
+```
+http :3000/body-json a:=1 b:=2
+```
+
+returns
+
+```http
+HTTP/1.1 200 OK
+
+{
+    "a": 1,
+    "b": 2
+}
+```
+
+This `GET` request
+
+```
+http :3000/segment/1/2
+```
+
+returns
+
+```http
+HTTP/1.1 200 OK
+{
+    "a": "1",
+    "b": "2"
+}
+```
+
 ### Convenience Wrappers for HTTP Responses
 
 ```ts
 import { Route, ServerApp, Response } from 'retes';
 
-const { GET, } = Route;
+const { GET } = Route;
 const { Created, OK, Accepted, InternalServerError } = Response;
 
 const routes = [
@@ -153,6 +247,8 @@ main()
 ```
 
 ### Declarative Validation
+
+Retes comes with a built-in validation middleware. It's a higher-order functions that checks the request parameters against a Zod schema. Note that request parameters combine query params, body params and segment params into a single values available as `params`.
 
 ```tsx
 import { Route, ServerApp, Middleware } from 'retes';
