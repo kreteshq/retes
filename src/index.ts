@@ -193,13 +193,23 @@ export class ServerApp {
   routes: Routes;
   routePaths: Object;
   stop: () => Promise<void>;
+  handleError: (context: Context) => (error: Error) => void;
+  append: (context: Context) => () => void;
 
-  constructor(routes: Routes) {
+  constructor(
+    routes: Routes,
+    handleError = ({ response }) => error => {
+      response.statusCode = 500;
+    },
+    append = context => () => {}
+  ) {
     this.middlewares = new Base();
     this.router = new Router();
     this.routes = routes;
     this.routePaths = {};
     this.stop = () => Promise.reject(`You should start the server first`);
+    this.handleError = handleError;
+    this.append = append;
 
     // TODO move it to `start` once it's abstracted
     for (const [path, params] of this.routes) {
@@ -240,13 +250,15 @@ export class ServerApp {
     return this;
   }
 
-  async start(port: number = 0) {
-
+  async setup() {
     this.use(Routing(this.router));
-
     // append 404 middleware handler: it must be put at the end and only once
     // TODO Move to `catch` for pattern matching ?
     this.use(() => Response.NotFound());
+  }
+
+  async start(port: number = 0) {
+    await this.setup();
 
     this.server = http
       .createServer((request, response) => {
@@ -255,18 +267,18 @@ export class ServerApp {
         this.middlewares
           .compose(context)
           .then(handle(context))
-          .catch(error => {
-            response.statusCode = 500;
-          });
+          .then(this.append(context))
+          .catch(this.handleError(context));
       })
       .on('error', error => {
         console.error(error.message);
         process.exit(1);
       });
 
+    this.stop = getServerStopFunc(this.server);
+
     return new Promise<http.Server>((resolve, reject) => {
       this.server?.listen(port, () => {
-        this.stop = getServerStopFunc(this.server);
         resolve(this.server);
       });
     })
