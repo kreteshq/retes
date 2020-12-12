@@ -5,11 +5,11 @@ dependencies:
 devDependencies:
   '@types/busboy': 0.2.3
   '@types/debug': 4.1.5
-  '@types/node': 14.14.11
+  '@types/node': 14.14.12
   ava: 3.14.0
   axios: 0.21.0
   form-data: 3.0.0
-  typescript: 4.1.2
+  typescript: 4.1.3
 lockfileVersion: 5.2
 packages:
   /@babel/code-frame/7.10.4:
@@ -78,7 +78,7 @@ packages:
       integrity: sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==
   /@types/busboy/0.2.3:
     dependencies:
-      '@types/node': 14.14.11
+      '@types/node': 14.14.12
     dev: true
     resolution:
       integrity: sha1-ZpetKYcyRsUw8Jo/9aQIYYJCMNU=
@@ -86,10 +86,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Q1y515GcOdTHgagaVFhHnIFQ38ygs/kmxdNpvpou+raI9UO3YZcHDngBSYKQklcKlvA7iuQlmIKbzvmxcOE9CQ==
-  /@types/node/14.14.11:
+  /@types/node/14.14.12:
     dev: true
     resolution:
-      integrity: sha512-BJ97wAUuU3NUiUCp44xzUFquQEvnk1wu7q4CMEUYKJWjdkr0YWYDsm4RFtAvxYsNjLsKcrFt6RvK8r+mnzMbEQ==
+      integrity: sha512-ASH8OPHMNlkdjrEdmoILmzFfsJICvhBsFfAum4aKZ/9U4B6M6tTmTPh+f3ttWdD74CEGV5XvXWkbyfSdXaTd7g==
   /@types/normalize-package-data/2.4.0:
     dev: true
     resolution:
@@ -886,7 +886,7 @@ packages:
       integrity: sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==
   /global-dirs/2.0.1:
     dependencies:
-      ini: 1.3.6
+      ini: 1.3.8
     dev: true
     engines:
       node: '>=8'
@@ -1018,10 +1018,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
-  /ini/1.3.6:
+  /ini/1.3.8:
     dev: true
     resolution:
-      integrity: sha512-IZUoxEjNjubzrmvzZU4lKP7OnYmX72XRl3sqkfJhBKweKi5rnGi5+IUdlj/H1M+Ip5JQ1WzaDMOBRY90Ajc5jg==
+      integrity: sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==
   /irregular-plurals/3.2.0:
     dev: true
     engines:
@@ -1620,7 +1620,7 @@ packages:
   /rc/1.2.8:
     dependencies:
       deep-extend: 0.6.0
-      ini: 1.3.6
+      ini: 1.3.8
       minimist: 1.2.5
       strip-json-comments: 2.0.1
     dev: true
@@ -1978,13 +1978,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==
-  /typescript/4.1.2:
+  /typescript/4.1.3:
     dev: true
     engines:
       node: '>=4.2.0'
     hasBin: true
     resolution:
-      integrity: sha512-thGloWsGH3SOxv1SoY7QojKi0tc+8FnOmiarEGMbd/lar7QOEd3hvlx3Fp5y6FlDUGl9L+pd4n2e+oToGMmhRQ==
+      integrity: sha512-B3ZIOf1IKeH2ixgHhj6la6xdwR9QrLC5d1VKeCSY4tvkqhF2eqd9O7txNlS0PO3GrBAFIdr3L1ndNwteUbZLYg==
   /unique-string/2.0.0:
     dependencies:
       crypto-random-string: 2.0.0
@@ -2115,11 +2115,11 @@ packages:
 specifiers:
   '@types/busboy': ^0.2.3
   '@types/debug': ^4.1.5
-  '@types/node': ^14.14.11
+  '@types/node': ^14.14.12
   ava: ^3.14.0
   axios: ^0.21.0
   busboy: ^0.3.1
   debug: ^4.3.1
   form-data: ^3.0.0
-  typescript: 4.1.2
+  typescript: 4.1.3
   zod: ^2.0.0-beta.29
