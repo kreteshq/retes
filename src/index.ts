@@ -143,9 +143,7 @@ const Response = {
   Unauthorized(): Response {
     return {
       statusCode: 401,
-      headers: {
-        'WWW-Authenticate': 'Basic realm=Authorization Required'
-      },
+      headers: {},
       body: ''
     };
   },
