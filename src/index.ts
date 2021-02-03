@@ -157,7 +157,14 @@ const Response = {
     };
   },
 
-  InternalServerError(content: string = ''): Response {
+  Conflict(content: string = ''): Response {
+    return {
+      statusCode: 409,
+      body: content
+    };
+  },
+
+  Internalservererror(content: string = ''): Response {
     return {
       statusCode: 500,
       body: content
