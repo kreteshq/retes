@@ -44,6 +44,11 @@ const Route = {
 };
 
 const Response = {
+  
+
+  // 
+  // 2xx
+  //
   OK(body: ResponseBody, headers = {}): Response {
     return { headers, body, statusCode: 200 };
   },
@@ -131,14 +136,17 @@ const Response = {
     };
   },
 
-  NotFound(headers = {}): Response {
+  //
+  // 4xx
+  //
+  BadRequest(): Response {
     return {
-      statusCode: 404,
-      type: 'text/html',
-      headers,
-      body: "Not Found"
+      statusCode: 400,
+      headers: {},
+      body: ''
     };
   },
+
 
   Unauthorized(): Response {
     return {
@@ -152,6 +160,31 @@ const Response = {
     return {
       statusCode: 403,
       body: content
+    };
+  },
+
+  NotFound(headers = {}): Response {
+    return {
+      statusCode: 404,
+      type: 'text/html',
+      headers,
+      body: "Not Found"
+    };
+  },
+
+  MethodNotAllowed(): Response {
+    return {
+      statusCode: 405,
+      headers: {},
+      body: ""
+    };
+  },
+
+  NotAcceptable(): Response {
+    return {
+      statusCode: 406,
+      headers: {},
+      body: ""
     };
   },
 
