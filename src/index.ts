@@ -194,8 +194,12 @@ const Response = {
       body: content
     };
   },
+  
+  //
+  // 5xx
+  // 
 
-  Internalservererror(content: string = ''): Response {
+  InternalServerError(content: string = ''): Response {
     return {
       statusCode: 500,
       body: content
