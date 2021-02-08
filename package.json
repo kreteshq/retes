@@ -1,6 +1,6 @@
 {
   "name": "retes",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Typed, Declarative, Data-Driven Routing for Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,7 @@
     "test-watch": "ava --watch"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "busboy": "^0.3.1",
     "debug": "^4.3.1",
