@@ -5,7 +5,7 @@ dependencies:
 devDependencies:
   '@types/busboy': 0.2.3
   '@types/debug': 4.1.5
-  '@types/node': 14.14.22
+  '@types/node': 14.14.25
   ava: 3.15.0
   axios: 0.21.1_debug@4.3.1
   form-data: 3.0.0
@@ -78,7 +78,7 @@ packages:
       integrity: sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==
   /@types/busboy/0.2.3:
     dependencies:
-      '@types/node': 14.14.22
+      '@types/node': 14.14.25
     dev: true
     resolution:
       integrity: sha1-ZpetKYcyRsUw8Jo/9aQIYYJCMNU=
@@ -86,10 +86,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Q1y515GcOdTHgagaVFhHnIFQ38ygs/kmxdNpvpou+raI9UO3YZcHDngBSYKQklcKlvA7iuQlmIKbzvmxcOE9CQ==
-  /@types/node/14.14.22:
+  /@types/node/14.14.25:
     dev: true
     resolution:
-      integrity: sha512-g+f/qj/cNcqKkc3tFqlXOYjrmZA+jNBiDzbP3kH+B+otKFqAdPgVTGP1IeKRdMml/aE69as5S4FqtxAbl+LaMw==
+      integrity: sha512-EPpXLOVqDvisVxtlbvzfyqSsFeQxltFbluZNRndIb8tr9KiBnYNLzrc1N3pyKUCww2RNrfHDViqDWWE1LCJQtQ==
   /@types/normalize-package-data/2.4.0:
     dev: true
     resolution:
@@ -297,14 +297,14 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
-  /bl/4.0.3:
+  /bl/4.0.4:
     dependencies:
       buffer: 5.7.1
       inherits: 2.0.4
       readable-stream: 3.6.0
     dev: true
     resolution:
-      integrity: sha512-fs4G6/Hu4/EE+F75J8DuN/0IpQqNjAdC7aEQv7Qt8MHGUH7Ckv2MwTEEeN9QehD0pfIDkMI1bkHYkKy7xHyKIg==
+      integrity: sha512-7tdr4EpSd7jJ6tuQ21vu2ke8w7pNEstzj1O8wwq6sNNzO3UDi5MA8Gny/gquCj7r2C6fHudg8tKRGyjRgmvNxQ==
   /blueimp-md5/2.18.0:
     dev: true
     resolution:
@@ -416,7 +416,7 @@ packages:
     engines:
       node: '>= 8.10.0'
     optionalDependencies:
-      fsevents: 2.3.1
+      fsevents: 2.3.2
     resolution:
       integrity: sha512-9+s+Od+W0VJJzawDma/gvBNQqkTiqYTWLuZoyAsivsI4AaWTCzHG06/TMjsf1cYe9Cb97UCEhjz7HvnPk2p/tw==
   /chunkd/2.0.1:
@@ -556,7 +556,7 @@ packages:
   /configstore/5.0.1:
     dependencies:
       dot-prop: 5.3.0
-      graceful-fs: 4.2.4
+      graceful-fs: 4.2.5
       make-dir: 3.1.0
       unique-string: 2.0.0
       write-file-atomic: 3.0.3
@@ -639,7 +639,7 @@ packages:
   /del/6.0.0:
     dependencies:
       globby: 11.0.2
-      graceful-fs: 4.2.4
+      graceful-fs: 4.2.5
       is-glob: 4.0.1
       is-path-cwd: 2.2.0
       is-path-inside: 3.0.2
@@ -843,7 +843,7 @@ packages:
     dev: true
     resolution:
       integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
-  /fsevents/2.3.1:
+  /fsevents/2.3.2:
     dev: true
     engines:
       node: ^8.16.0 || ^10.6.0 || >=11.0.0
@@ -851,7 +851,7 @@ packages:
     os:
       - darwin
     resolution:
-      integrity: sha512-YR47Eg4hChJGAB1O3yEAOkGO+rlzutoICGqGo9EZ4lKWokzZRSyIW1QmTzqjtw8MJdj9srP869CuWw/hyzSiBw==
+      integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
   /function-bind/1.1.1:
     dev: true
     resolution:
@@ -936,10 +936,10 @@ packages:
       node: '>=8.6'
     resolution:
       integrity: sha512-R7eWptXuGYxwijs0eV+v3o6+XH1IqVK8dJOEecQfTmkncw9AV4dcw/Dhxi8MdlqPthxxpZyizMzyg8RTmEsG+Q==
-  /graceful-fs/4.2.4:
+  /graceful-fs/4.2.5:
     dev: true
     resolution:
-      integrity: sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
+      integrity: sha512-kBBSQbz2K0Nyn+31j/w36fUfxkBW9/gfwRWdUY1ULReH3iokVJgddZAFcD1D0xlgTmFxJCbUkUclAlc6/IDJkw==
   /has-flag/3.0.0:
     dev: true
     engines:
@@ -1213,7 +1213,7 @@ packages:
       integrity: sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
   /load-json-file/5.3.0:
     dependencies:
-      graceful-fs: 4.2.4
+      graceful-fs: 4.2.5
       parse-json: 4.0.0
       pify: 4.0.1
       strip-bom: 3.0.0
@@ -1414,7 +1414,7 @@ packages:
       integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==
   /ora/5.3.0:
     dependencies:
-      bl: 4.0.3
+      bl: 4.0.4
       chalk: 4.1.0
       cli-cursor: 3.1.0
       cli-spinners: 2.5.0
@@ -2146,7 +2146,7 @@ packages:
 specifiers:
   '@types/busboy': ^0.2.3
   '@types/debug': ^4.1.5
-  '@types/node': ^14.14.22
+  '@types/node': ^14.14.25
   ava: ^3.15.0
   axios: ^0.21.1
   busboy: ^0.3.1
