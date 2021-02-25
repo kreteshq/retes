@@ -44,7 +44,6 @@ const Route = {
 };
 
 const Response = {
-  
 
   // 
   // 2xx

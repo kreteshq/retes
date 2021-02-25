@@ -11,7 +11,7 @@ export interface Request {
   params: Params
   headers?: {
     [name: string]: any
-  },
+  }
   files?: {
     [name: string]: {
       name: string
@@ -20,8 +20,9 @@ export interface Request {
       encoding: string
       mimetype: string
     }
-  },
-  url: string,
+  }
+  user?: object
+  url: string
   method: string
   format: string
 }
