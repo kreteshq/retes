@@ -8,7 +8,22 @@ import http from 'http';
 import { AddressInfo } from 'net';
 import { Router } from './router';
 
-import { Handler, RouteOptions, Route, Response, CompoundResponse, ResponseBody, Resource, Routes, Context, RoutePaths, Middleware, Request, LocalMiddleware } from './types';
+import {
+  Handler,
+  RouteOptions,
+  Route,
+  Response,
+  CompoundResponse,
+  ResponseBody,
+  Resource,
+  Routes,
+  Context,
+  RoutePaths,
+  Middleware,
+  Request,
+  LocalMiddleware,
+  Pipeline,
+} from './types';
 import { handle } from './core';
 import { Routing } from './routing';
 import { compose } from './util';
@@ -339,7 +354,10 @@ export {
   Resource,
   ResponseBody,
   Request,
+  Middleware,
+  LocalMiddleware,
   Handler,
+  Pipeline,
   handle,
 }
 

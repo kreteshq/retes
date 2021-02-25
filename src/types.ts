@@ -44,6 +44,7 @@ export type Response =
   | ReadStream;
 
 export type Handler = (request: Request) => Response | Promise<Response>;
+export type Pipeline = [...LocalMiddleware[], Handler];
 
 export interface Meta {
   summary?: string
