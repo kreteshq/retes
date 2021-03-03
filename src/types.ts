@@ -21,6 +21,7 @@ export interface Request<U = unknown> {
       mimetype: string
     }
   }
+  cookies?: object
   user?: U 
   url: string
   method: string
