@@ -7,7 +7,7 @@ export interface Params {
 
 export type Next = (request?: Request) => Response | Promise<Response>;
 
-export interface Request {
+export interface Request<U = unknown> {
   params: Params
   headers?: {
     [name: string]: any
@@ -21,7 +21,7 @@ export interface Request {
       mimetype: string
     }
   }
-  user?: object
+  user?: U 
   url: string
   method: string
   format: string
