@@ -1,6 +1,6 @@
 {
   "name": "retes",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Typed, Declarative, Data-Driven Routing for Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
