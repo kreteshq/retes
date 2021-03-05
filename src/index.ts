@@ -23,6 +23,7 @@ import {
   Request,
   LocalMiddleware,
   Pipeline,
+  Meta,
 } from './types';
 import { handle } from './core';
 import { Routing } from './routing';
@@ -40,21 +41,34 @@ export const HTTPMethod = {
 } as const;
 export type HTTPMethod = (typeof HTTPMethod)[keyof typeof HTTPMethod];
 
+function isPipeline(handler: Handler | Pipeline): handler is Pipeline {
+  return Array.isArray(handler) 
+}
+
+function makeRoute(name: HTTPMethod, path: string, handler: Handler | Pipeline, middleware: LocalMiddleware[], meta: Meta): Route {
+  if (isPipeline(handler)) {
+    const h = handler.pop() as Handler;
+    return [path, { [name]: h, middleware: [...middleware, ...handler as LocalMiddleware[]], meta }]
+  } else {
+    return [path, { [name]: handler, middleware, meta }]
+  }
+}
+
 const Route = {
-  GET(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
-    return [path, { GET: handler, middleware, meta }]
+  GET(path: string, handler: Handler | Pipeline, { middleware = [], meta = {}}: RouteOptions = {}): Route {
+    return makeRoute('GET', path, handler, middleware, meta)
   },
-  POST(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
-    return [path, { POST: handler, middleware, meta }]
+  POST(path: string, handler: Handler | Pipeline, { middleware = [], meta = {}}: RouteOptions = {}): Route {
+    return makeRoute('POST', path, handler, middleware, meta)
   },
-  PATCH(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
-    return [path, { PATCH: handler, middleware, meta }]
+  PATCH(path: string, handler: Handler | Pipeline, { middleware = [], meta = {}}: RouteOptions = {}): Route {
+    return makeRoute('PATCH', path, handler, middleware, meta)
   },
-  PUT(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
-    return [path, { PUT: handler, middleware, meta }]
+  PUT(path: string, handler: Handler | Pipeline, { middleware = [], meta = {}}: RouteOptions = {}): Route {
+    return makeRoute('PUT', path, handler, middleware, meta)
   },
-  DELETE(path: string, handler: Handler, { middleware = [], meta = {}}: RouteOptions = {}): Route {
-    return [path, { DELETE: handler, middleware, meta }]
+  DELETE(path: string, handler: Handler | Pipeline, { middleware = [], meta = {}}: RouteOptions = {}): Route {
+    return makeRoute('DELETE', path, handler, middleware, meta)
   }
 };
 
@@ -280,7 +294,7 @@ export class ServerApp {
             summary,
           };
 
-          const flow = middleware.concat(handler);
+          const flow: Pipeline = [...middleware, handler as Handler];
           this.add(method as HTTPMethod, path, ...flow);
         }
         // else: a key name undefined in the spec -> discarding
@@ -293,13 +307,13 @@ export class ServerApp {
     return this;
   }
 
-  add(method: HTTPMethod, path: string, ...fns: (LocalMiddleware | Handler)[]) {
+  add(method: HTTPMethod, path: string, ...fns: [...LocalMiddleware[], Handler]) {
     const action = fns.pop();
 
     // pipeline is a handler composed over middlewares,
     // `action` function must be explicitly extracted from the pipeline
     // as it has different signature, thus cannot be composed
-    const pipeline = fns.length === 0 ? action : compose(...fns)(action);
+    const pipeline = fns.length === 0 ? action : compose(...fns as LocalMiddleware[])(action);
 
     this.router.add(method.toUpperCase(), path, pipeline);
 
