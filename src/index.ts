@@ -21,7 +21,6 @@ import {
   RoutePaths,
   Middleware,
   Request,
-  LocalMiddleware,
   Pipeline,
   Meta,
 } from './types';
@@ -45,10 +44,10 @@ function isPipeline(handler: Handler | Pipeline): handler is Pipeline {
   return Array.isArray(handler) 
 }
 
-function makeRoute(name: HTTPMethod, path: string, handler: Handler | Pipeline, middleware: LocalMiddleware[], meta: Meta): Route {
+function makeRoute(name: HTTPMethod, path: string, handler: Handler | Pipeline, middleware: Middleware[], meta: Meta): Route {
   if (isPipeline(handler)) {
     const h = handler.pop() as Handler;
-    return [path, { [name]: h, middleware: [...middleware, ...handler as LocalMiddleware[]], meta }]
+    return [path, { [name]: h, middleware: [...middleware, ...handler as Middleware[]], meta }]
   } else {
     return [path, { [name]: handler, middleware, meta }]
   }
@@ -307,13 +306,13 @@ export class ServerApp {
     return this;
   }
 
-  add(method: HTTPMethod, path: string, ...fns: [...LocalMiddleware[], Handler]) {
+  add(method: HTTPMethod, path: string, ...fns: [...Middleware[], Handler]) {
     const action = fns.pop();
 
     // pipeline is a handler composed over middlewares,
     // `action` function must be explicitly extracted from the pipeline
     // as it has different signature, thus cannot be composed
-    const pipeline = fns.length === 0 ? action : compose(...fns as LocalMiddleware[])(action);
+    const pipeline = fns.length === 0 ? action : compose(...fns as Middleware[])(action);
 
     this.router.add(method.toUpperCase(), path, pipeline);
 

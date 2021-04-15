@@ -45,7 +45,7 @@ export type Response =
   | ReadStream;
 
 export type Handler = (request: Request) => Response | Promise<Response>;
-export type Pipeline = [...LocalMiddleware[], Handler];
+export type Pipeline = [...Middleware[], Handler];
 
 export interface Meta {
   summary?: string
@@ -54,10 +54,7 @@ export interface Meta {
   responses?: Object
 }
 
-export type GlobalMiddleware = (context: Context, next: Next) => Response | Promise<Response>
-export type LocalMiddleware = (next: Next) => (request: Request) => Response | Promise<Response>
-
-export type Middleware = GlobalMiddleware | LocalMiddleware;
+export type Middleware = (handler: Handler) => (request: Request) => Response | Promise<Response>
 
 // export interface RoutePath {
 //   [name: HTTPMethod]: any
@@ -68,7 +65,7 @@ export interface RoutePaths {
 }
 
 export interface RouteOptions {
-  middleware?: LocalMiddleware[]
+  middleware?: Middleware[]
   meta?: Meta
 }
 
@@ -78,7 +75,7 @@ interface RouteParams {
   PUT?: Handler
   PATCH?: Handler
   DELETE?: Handler
-  middleware?: LocalMiddleware[]
+  middleware?: Middleware[]
   meta?: Meta
 }
 
