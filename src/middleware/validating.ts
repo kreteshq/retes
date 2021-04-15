@@ -4,11 +4,11 @@
 import * as z from 'zod';
 import { ParseParams } from 'zod/lib/cjs/parser';
 
-import { Response } from '../';
+import { Middleware, Response } from '../';
 
 const { JSONPayload } = Response;
 
-export const Validating = (schema: z.ZodSchema<unknown>, options?: ParseParams) => {
+export function Validating(schema: z.ZodSchema<unknown>, options?: ParseParams): Middleware {
   return next => async request => {
     const { params } = request;
     const result = await schema.safeParseAsync(params, options);
@@ -18,6 +18,6 @@ export const Validating = (schema: z.ZodSchema<unknown>, options?: ParseParams) 
     } else {
       return next(request);
     }
-  };
+  }; 
 };
 
