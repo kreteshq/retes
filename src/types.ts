@@ -26,6 +26,8 @@ export interface Request<U = unknown> {
   url: string
   method: string
   format: string
+  body: http.IncomingMessage
+  response: http.ServerResponse
 }
 
 export type ResponseBody = string | object;
@@ -87,6 +89,8 @@ export interface Context {
   request: http.IncomingMessage
   response: http.ServerResponse
   params: Params
+  url: string
+  method: string
   headers?: Params
   cookies?: Object
   format?: string

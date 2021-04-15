@@ -17,12 +17,12 @@ import {
 } from './util';
 
 import { Router } from './router';
-import { Context, Handler, KeyValue, Middleware, Next, Params, Response } from './types';
+import { Context, Handler, KeyValue, Middleware, Params, Request, Response } from './types';
 
-export const Routing = (router: Router, options = {}): Middleware => {
-  return async (context: Context, next: Next): Promise<Response> => {
-    const method = context.request.method;
-    const { pathname, query } = parse(context.request.url ?? "", true); // TODO Test perf vs RegEx
+export const Routing = (router: Router): Middleware => {
+  return (next: Handler) => async (request: Request) => {
+    const method = request.method;
+    const { pathname, query } = parse(request.url ?? "", true); // TODO Test perf vs RegEx
 
     const [handler, dynamicRoutes]: [Function, KeyValue[]] = router.find(method, pathname);
 
@@ -32,48 +32,48 @@ export const Routing = (router: Router, options = {}): Middleware => {
     }
 
     if (handler !== undefined) {
-      context.params = { ...query, ...params };
-      await handleRequest(context);
-      context.params = { ...context.params };
-      return handler(context);
+      request.params = { ...query, ...params };
+      await handleRequest(request);
+      request.params = { ...request.params };
+      return handler(request);
     } else {
-      return next();
+      return next(request);
     }
   };
 }
 
-const handleRequest = async (context: Context) => {
-  const { headers } = context.request;
-  const { format } = context.params;
+const handleRequest = async (request: Request) => {
+  const { headers, params } = request;
+  const { format } = params;
 
-  context.headers = headers;
-  context.cookies = parseCookies(headers.cookie);
-  context.format = format ? format : parseAcceptHeader(headers);
+  request.headers = headers;
+  request.cookies = parseCookies(headers.cookie);
+  request.format = format ? format : parseAcceptHeader(headers);
 
-  const buffer = await toBuffer(context.request);
+  const buffer = await toBuffer(request.body);
   if (buffer.length > 0) {
     const contentType = headers['content-type']?.split(';')[0];
 
     switch (contentType) {
       case 'application/x-www-form-urlencoded':
-        Object.assign(context.params, querystring.parse(buffer.toString()));
+        Object.assign(params, querystring.parse(buffer.toString()));
         break;
       case 'application/json': {
         const result = JSON.parse(buffer.toString());
         if (isObject(result)) {
-          Object.assign(context.params, result);
+          Object.assign(params, result);
         }
         break;
       }
       case 'multipart/form-data': {
-        context.files = {};
+        request.files = {};
 
         const busboy = new Busboy({ headers });
 
         busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
           file.on('data', data => {
-            context.files = {
-              ...context.files,
+            request.files = {
+              ...request.files,
               [fieldname]: {
                 name: filename,
                 length: data.length,
@@ -86,7 +86,7 @@ const handleRequest = async (context: Context) => {
           file.on('end', () => {});
         });
         busboy.on('field', (fieldname, val) => {
-          context.params = { ...context.params, [fieldname]: val };
+          request.params = { ...request.params, [fieldname]: val };
         });
         busboy.end(buffer);
 

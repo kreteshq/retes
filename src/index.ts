@@ -17,8 +17,6 @@ import {
   ResponseBody,
   Resource,
   Routes,
-  Context,
-  RoutePaths,
   Middleware,
   Request,
   Pipeline,
@@ -26,7 +24,6 @@ import {
 } from './types';
 import { handle } from './core';
 import { Routing } from './routing';
-import { compose } from './util';
 import { getServerStopFunc } from './graceful-stop';
 
 export const HTTPMethod = {
@@ -39,6 +36,9 @@ export const HTTPMethod = {
   DELETE: 'DELETE',
 } as const;
 export type HTTPMethod = (typeof HTTPMethod)[keyof typeof HTTPMethod];
+
+const compose = <T extends CallableFunction, U>(...functions: T[]) =>
+  (args: U) => functions.reduceRight((arg, fn) => fn(arg), args);
 
 function isPipeline(handler: Handler | Pipeline): handler is Pipeline {
   return Array.isArray(handler) 
@@ -234,36 +234,15 @@ const Response = {
   }
 }
 
-class Base extends Array {
-  async next(context: Context, last, current: number, done?: boolean, called?: boolean, func?) {
-    if ((done = current > this.length)) return;
-
-    func = this[current] || last;
-
-    return (
-      func &&
-      func(context, async () => {
-        if (called) throw new Error('next() already called');
-        called = true;
-        return this.next(context, last, current + 1);
-      })
-    );
-  }
-
-  async compose(context: Context, last?) {
-    return this.next(context, last, 0);
-  }
-}
-
 export class ServerApp {
   server: http.Server | undefined;
   router: Router;
-  middlewares: Base;
+  middlewares: Array<Middleware>;
   routes: Routes;
   routePaths: Object;
   stop: () => Promise<void>;
-  handleError: (context: Context) => (error: Error) => void;
-  append: (context: Context) => () => void;
+  handleError: (request: Request) => (error: Error) => void;
+  append: (request: Request) => () => void;
 
   constructor(
     routes: Routes,
@@ -272,7 +251,7 @@ export class ServerApp {
     },
     append = context => () => {}
   ) {
-    this.middlewares = new Base();
+    this.middlewares = []; 
     this.router = new Router();
     this.routes = routes;
     this.routePaths = {};
@@ -301,7 +280,7 @@ export class ServerApp {
     }
   }
 
-  use(middleware: Middleware | Promise<Middleware>) {
+  use(middleware: Middleware) {
     this.middlewares.push(middleware);
     return this;
   }
@@ -321,9 +300,6 @@ export class ServerApp {
 
   async setup() {
     this.use(Routing(this.router));
-    // append 404 middleware handler: it must be put at the end and only once
-    // TODO Move to `catch` for pattern matching ?
-    this.use(() => Response.NotFound());
   }
 
   async start(port: number = 0) {
@@ -331,10 +307,19 @@ export class ServerApp {
 
     this.server = http
       .createServer((request, response) => {
-        const context = { params: {}, headers: {}, request, response } as Context;
+        const { method, url, headers } = request;
+        const context = { 
+          params: {}, 
+          headers, 
+          method,
+          url,
+          body: request, 
+          response 
+        } as Request;
 
-        this.middlewares
-          .compose(context)
+        const pipeline = compose<Middleware, Handler>(...this.middlewares)((_) => Response.NotFound());
+
+        pipeline(context)
           .then(handle(context))
           .then(this.append(context))
           .catch(this.handleError(context));
@@ -368,7 +353,6 @@ export {
   ResponseBody,
   Request,
   Middleware,
-  LocalMiddleware,
   Handler,
   Pipeline,
   handle,
