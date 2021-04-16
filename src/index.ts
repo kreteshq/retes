@@ -25,6 +25,7 @@ import {
 import { handle } from './core';
 import { Routing } from './routing';
 import { getServerStopFunc } from './graceful-stop';
+import { NotFound }from './response';
 
 export const HTTPMethod = {
   GET: 'GET',
@@ -70,169 +71,6 @@ const Route = {
     return makeRoute('DELETE', path, handler, middleware, meta)
   }
 };
-
-const Response = {
-
-  // 
-  // 2xx
-  //
-  OK(body: ResponseBody, headers = {}): Response {
-    return { headers, body, statusCode: 200 };
-  },
-
-  Created(resource: Resource = '', headers = {}): Response {
-    return {
-      statusCode: 201,
-      headers,
-      body: resource,
-    };
-  },
-
-  Accepted(resource: Resource = '', headers = {}): Response {
-    return {
-      statusCode: 202,
-      headers,
-      body: resource
-    };
-  },
-
-  NoContent(headers = {}): Response {
-    return {
-      statusCode: 204,
-      headers,
-      body: '',
-    };
-  },
-
-  Redirect(url: string, body = 'Redirecting...', statusCode = 302): Response {
-    return {
-      statusCode,
-      headers: { Location: url },
-      type: 'text/plain',
-      body,
-    };
-  },
-
-  NotModified(headers = {}): Response {
-    return {
-      statusCode: 304,
-      headers,
-      body: '',
-    };
-  },
-
-  JSONPayload(content, statusCode = 200) {
-    return {
-      statusCode,
-      body: JSON.stringify(content),
-      type: 'application/json',
-    };
-  },
-
-  HTMLString(content: string): Response {
-    return {
-      statusCode: 200,
-      type: 'text/html',
-      body: content,
-    };
-  },
-
-  HTMLStream(content): Response {
-    const Readable = require('stream').Readable;
-
-    const s = new Readable();
-    s.push(content);
-    s.push(null);
-
-    return s;
-  },
-
-  JavaScriptString(content: string): Response {
-    return {
-      statusCode: 200,
-      type: 'application/javascript',
-      body: content,
-    };
-  },
-
-  StyleSheetString(content: string): Response {
-    return {
-      statusCode: 200,
-      type: 'text/css',
-      body: content,
-    };
-  },
-
-  //
-  // 4xx
-  //
-  BadRequest(): Response {
-    return {
-      statusCode: 400,
-      headers: {},
-      body: ''
-    };
-  },
-
-
-  Unauthorized(): Response {
-    return {
-      statusCode: 401,
-      headers: {},
-      body: ''
-    };
-  },
-
-  Forbidden(content: string = ''): Response {
-    return {
-      statusCode: 403,
-      body: content
-    };
-  },
-
-  NotFound(headers = {}): Response {
-    return {
-      statusCode: 404,
-      type: 'text/html',
-      headers,
-      body: "Not Found"
-    };
-  },
-
-  MethodNotAllowed(): Response {
-    return {
-      statusCode: 405,
-      headers: {},
-      body: ""
-    };
-  },
-
-  NotAcceptable(): Response {
-    return {
-      statusCode: 406,
-      headers: {},
-      body: ""
-    };
-  },
-
-  Conflict(content: string = ''): Response {
-    return {
-      statusCode: 409,
-      body: content
-    };
-  },
-  
-  //
-  // 5xx
-  // 
-
-  InternalServerError(content: string = ''): Response {
-    return {
-      statusCode: 500,
-      body: content
-    };
-  }
-}
 
 export class ServerApp {
   server: http.Server | undefined;
@@ -317,7 +155,7 @@ export class ServerApp {
           response 
         } as Request;
 
-        const pipeline = compose<Middleware, Handler>(...this.middlewares)((_) => Response.NotFound());
+        const pipeline = compose<Middleware, Handler>(...this.middlewares)((_) => NotFound());
 
         pipeline(context)
           .then(handle(context))

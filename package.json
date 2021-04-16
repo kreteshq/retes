@@ -26,5 +26,9 @@
     "axios": "^0.21.1",
     "form-data": "^4.0.0",
     "typescript": "4.2.4"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./response": "./dist/response.js"
   }
 }
