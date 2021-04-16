@@ -29,6 +29,6 @@
   },
   "exports": {
     ".": "./dist/index.js",
-    "./response": "./dist/response.js"
+    "./response": "./dist/response/index.js"
   }
 }

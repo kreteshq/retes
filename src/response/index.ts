@@ -1,4 +1,4 @@
-import { Resource, Response, ResponseBody } from "./types";
+import { Resource, Response, ResponseBody } from "../types";
 
 // 
 // 2xx

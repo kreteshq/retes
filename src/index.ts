@@ -196,4 +196,5 @@ export {
   handle,
 }
 
+export * as response from './response';
 export * as middleware from './middleware';
