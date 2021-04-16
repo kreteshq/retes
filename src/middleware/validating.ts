@@ -5,8 +5,7 @@ import * as z from 'zod';
 import { ParseParams } from 'zod/lib/cjs/parser';
 
 import { Middleware, Response } from '../';
-
-const { JSONPayload } = Response;
+import { JSONPayload } from '../response';
 
 export function Validating(schema: z.ZodSchema<unknown>, options?: ParseParams): Middleware {
   return next => async request => {

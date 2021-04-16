@@ -2,13 +2,13 @@ import test from 'ava';
 import axios, { AxiosInstance } from 'axios';
 import FormData from 'form-data';
 
-import { Route, Response, ServerApp } from '.';
+import { Route, ServerApp } from '.';
 import { Next, Request } from './types';
+import { OK, Created, HTMLString } from './response';
 
 const { before, after } = test;
 
 const { GET, POST, PUT, DELETE } = Route;
-const { OK, Created, HTMLString } = Response;
 
 const ExplicitResponse = {
   statusCode: 200,

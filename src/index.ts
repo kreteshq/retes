@@ -23,7 +23,7 @@ import {
   Meta,
 } from './types';
 import { handle } from './core';
-import { Routing } from './routing';
+import { Routing } from './middleware'
 import { getServerStopFunc } from './graceful-stop';
 import { NotFound }from './response';
 

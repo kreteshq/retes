@@ -14,10 +14,10 @@ import {
   parseCookies,
   parseAcceptHeader,
   toBuffer,
-} from './util';
+} from '../util';
 
-import { Router } from './router';
-import { Context, Handler, KeyValue, Middleware, Params, Request, Response } from './types';
+import { Router } from '../router';
+import { Handler, KeyValue, Middleware, Params, Request } from '../types';
 
 export const Routing = (router: Router): Middleware => {
   return (next: Handler) => async (request: Request) => {
