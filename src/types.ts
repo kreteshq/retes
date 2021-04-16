@@ -24,6 +24,7 @@ export interface Request<U = unknown> {
   cookies?: object
   user?: U 
   url: string
+  path: string
   method: string
   format: string
   body: http.IncomingMessage
