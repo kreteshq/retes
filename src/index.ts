@@ -84,12 +84,13 @@ export class ServerApp {
 
   constructor(
     routes: Routes,
+    middlewares: Middleware[] = [],
     handleError = ({ response }) => error => {
       response.statusCode = 500;
     },
     append = context => () => {}
   ) {
-    this.middlewares = []; 
+    this.middlewares = middlewares; 
     this.router = new Router();
     this.routes = routes;
     this.routePaths = {};
