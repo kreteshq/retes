@@ -81,6 +81,7 @@ export class ServerApp {
   stop: () => Promise<void>;
   handleError: (request: Request) => (error: Error) => void;
   append: (request: Request) => () => void;
+  custom: (request: http.IncomingMessage, response: http.ServerResponse, next: Function) => void;
 
   constructor(
     routes: Routes,
@@ -88,7 +89,8 @@ export class ServerApp {
     handleError = ({ response }) => error => {
       response.statusCode = 500;
     },
-    append = context => () => {}
+    append = context => () => {},
+    custom = (request, response, next) => { next() }
   ) {
     this.middlewares = middlewares; 
     this.router = new Router();
@@ -97,6 +99,7 @@ export class ServerApp {
     this.stop = () => Promise.reject(`You should start the server first`);
     this.handleError = handleError;
     this.append = append;
+    this.custom = custom;
 
     // TODO move it to `start` once it's abstracted
     for (const [path, params] of this.routes) {
@@ -158,10 +161,11 @@ export class ServerApp {
 
         const pipeline = compose<Middleware, Handler>(...this.middlewares)((_) => NotFound());
 
-        pipeline(context)
+        const prepend = next => this.custom(request, response, next)
+        prepend(() => pipeline(context)
           .then(handle(context))
           .then(this.append(context))
-          .catch(this.handleError(context));
+          .catch(this.handleError(context)));
       })
       .on('error', error => {
         console.error(error.message);
