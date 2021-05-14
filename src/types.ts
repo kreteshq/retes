@@ -7,6 +7,9 @@ export interface Params {
 
 export type Next = (request?: Request) => Response | Promise<Response>;
 
+interface AnyValue {
+  [name: string]: any
+}
 export interface Request<U = unknown> {
   params: Params
   headers?: {
@@ -29,6 +32,7 @@ export interface Request<U = unknown> {
   format: string
   body: http.IncomingMessage
   response: http.ServerResponse
+  context: AnyValue
 }
 
 export type ResponseBody = string | object;
