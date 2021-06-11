@@ -246,36 +246,6 @@ async function main() {
 main()
 ```
 
-### Declarative Validation
-
-Retes comes with a built-in validation middleware. It's a higher-order functions that checks the request parameters against a Zod schema. Note that request parameters combine query params, body params and segment params into a single values available as `params`.
-
-```tsx
-import { Route, ServerApp, Middleware } from 'retes';
-import * as z from 'zod';
-
-const { GET } = Route;
-
-const schema = z.object({
-  name: z.string()
-});
-
-const routes = [
-  GET('/request-validation', ({ params }) => {
-    return `The request for this handler is validated using the given schema`,
-  }, { middleware: [ Middleware.Validation(schema) ] }))
-]
-
-async function main() {
-  const app = new ServerApp(routes);
-  await app.start(3000);
-
-  console.log('started')
-}
-
-main()
-```
-
 ## Benchmarks
 
 WIP
