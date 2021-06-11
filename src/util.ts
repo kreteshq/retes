@@ -1,17 +1,20 @@
 // Copyright Zaiste. All rights reserved.
 // Licensed under the Apache License, Version 2.0
 
-import { Stream, Readable } from 'stream';
+import type { Stream, Readable } from "stream";
 
 export const print = (message: string) => {
-  console.log(message)
-}
+  console.log(message);
+};
 
 export function isObject(_: Object) {
-  return !!_ && typeof _ === 'object';
+  return !!_ && typeof _ === "object";
 }
 
-export const compose = <T extends Function>(...functions: T[]) => args => functions.reduceRight((arg, fn) => fn(arg), args);
+export const compose =
+  <T extends Function>(...functions: T[]) =>
+  (args) =>
+    functions.reduceRight((arg, fn) => fn(arg), args);
 
 export const toBuffer = async (stream: Readable) => {
   const chunks = [];
@@ -22,31 +25,31 @@ export const toBuffer = async (stream: Readable) => {
 };
 
 export const streamToString = async (stream: Stream) => {
-  let chunks = '';
+  let chunks = "";
 
   return new Promise<string>((resolve, reject) => {
-    stream.on('data', (chunk: string) => (chunks += chunk));
-    stream.on('error', reject);
-    stream.on('end', () => resolve(chunks));
+    stream.on("data", (chunk: string) => (chunks += chunk));
+    stream.on("error", reject);
+    stream.on("end", () => resolve(chunks));
   });
 };
 
-export const parseCookies = (cookieHeader = '') => {
+export const parseCookies = (cookieHeader = "") => {
   const cookies = cookieHeader.split(/; */);
   const decode = decodeURIComponent;
 
-  if (cookies[0] === '') return {};
+  if (cookies[0] === "") return {};
 
   const result = {};
   for (let cookie of cookies) {
-    const isKeyValue = cookie.includes('=');
+    const isKeyValue = cookie.includes("=");
 
     if (!isKeyValue) {
       result[cookie.trim()] = true;
       continue;
     }
 
-    let [key, value] = cookie.split('=');
+    let [key, value] = cookie.split("=");
 
     key.trim();
     value.trim();
@@ -65,11 +68,9 @@ export const parseCookies = (cookieHeader = '') => {
   return result;
 };
 
-export const parseAcceptHeader = ({ accept = '*/*' }) => {
-  const preferredType = accept.split(',').shift();
-  const format = preferredType?.split('/').pop();
+export const parseAcceptHeader = ({ accept = "*/*" }) => {
+  const preferredType = accept.split(",").shift();
+  const format = preferredType?.split("/").pop();
 
   return format;
 };
-
-

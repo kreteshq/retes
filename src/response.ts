@@ -1,13 +1,13 @@
-import { Resource, Response, ResponseBody } from "../types";
+import { Resource, Response, ResponseBody } from "./types";
 
-// 
+//
 // 2xx
 //
 export function OK(body: ResponseBody, headers = {}): Response {
   return { headers, body, statusCode: 200 };
 }
 
-export function Created(resource: Resource = '', headers = {}): Response {
+export function Created(resource: Resource = "", headers = {}): Response {
   return {
     statusCode: 201,
     headers,
@@ -15,11 +15,11 @@ export function Created(resource: Resource = '', headers = {}): Response {
   };
 }
 
-export function Accepted(resource: Resource = '', headers = {}): Response {
+export function Accepted(resource: Resource = "", headers = {}): Response {
   return {
     statusCode: 202,
     headers,
-    body: resource
+    body: resource,
   };
 }
 
@@ -27,15 +27,19 @@ export function NoContent(headers = {}): Response {
   return {
     statusCode: 204,
     headers,
-    body: '',
+    body: "",
   };
 }
 
-export function Redirect(url: string, body = 'Redirecting...', statusCode = 302): Response {
+export function Redirect(
+  url: string,
+  body = "Redirecting...",
+  statusCode = 302
+): Response {
   return {
     statusCode,
     headers: { Location: url },
-    type: 'text/plain',
+    type: "text/plain",
     body,
   };
 }
@@ -44,7 +48,7 @@ export function NotModified(headers = {}): Response {
   return {
     statusCode: 304,
     headers,
-    body: '',
+    body: "",
   };
 }
 
@@ -52,20 +56,20 @@ export function JSONPayload(content, statusCode = 200) {
   return {
     statusCode,
     body: JSON.stringify(content),
-    type: 'application/json',
+    type: "application/json",
   };
 }
 
 export function HTMLString(content: string): Response {
   return {
     statusCode: 200,
-    type: 'text/html',
+    type: "text/html",
     body: content,
   };
 }
 
 export function HTMLStream(content): Response {
-  const Readable = require('stream').Readable;
+  const Readable = require("stream").Readable;
 
   const s = new Readable();
   s.push(content);
@@ -77,7 +81,7 @@ export function HTMLStream(content): Response {
 export function JavaScriptString(content: string): Response {
   return {
     statusCode: 200,
-    type: 'application/javascript',
+    type: "application/javascript",
     body: content,
   };
 }
@@ -85,7 +89,7 @@ export function JavaScriptString(content: string): Response {
 export function StyleSheetString(content: string): Response {
   return {
     statusCode: 200,
-    type: 'text/css',
+    type: "text/css",
     body: content,
   };
 }
@@ -97,32 +101,31 @@ export function BadRequest(): Response {
   return {
     statusCode: 400,
     headers: {},
-    body: ''
+    body: "",
   };
 }
-
 
 export function Unauthorized(): Response {
   return {
     statusCode: 401,
     headers: {},
-    body: ''
+    body: "",
   };
 }
 
-export function Forbidden(content: string = ''): Response {
+export function Forbidden(content: string = ""): Response {
   return {
     statusCode: 403,
-    body: content
+    body: content,
   };
 }
 
 export function NotFound(headers = {}): Response {
   return {
     statusCode: 404,
-    type: 'text/html',
+    type: "text/html",
     headers,
-    body: "Not Found"
+    body: "Not Found",
   };
 }
 
@@ -130,7 +133,7 @@ export function MethodNotAllowed(): Response {
   return {
     statusCode: 405,
     headers: {},
-    body: ""
+    body: "",
   };
 }
 
@@ -138,24 +141,28 @@ export function NotAcceptable(): Response {
   return {
     statusCode: 406,
     headers: {},
-    body: ""
+    body: "",
   };
 }
 
-export function Conflict(content: string = ''): Response {
+export function Conflict(content: string = ""): Response {
   return {
     statusCode: 409,
-    body: content
+    body: content,
   };
 }
 
 //
 // 5xx
-// 
+//
 
-export function InternalServerError(content: string = ''): Response {
+export function InternalServerError(
+  content: string = "",
+  { headers = {} } = {}
+): Response {
   return {
     statusCode: 500,
-    body: content
+    body: content,
+    headers,
   };
 }
