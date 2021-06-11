@@ -15,17 +15,17 @@
   "license": "Apache-2.0",
   "dependencies": {
     "busboy": "^0.3.1",
-    "debug": "^4.3.1",
     "zod": "^2.0.0-beta.30"
+    "debug": "^4.3.1"
   },
   "devDependencies": {
     "@types/busboy": "^0.2.3",
     "@types/debug": "^4.1.5",
-    "@types/node": "^15.3.0",
+    "@types/node": "^15.12.2",
     "ava": "^3.15.0",
     "axios": "^0.21.1",
     "form-data": "^4.0.0",
-    "typescript": "4.2.4"
+    "typescript": "4.3.2"
   },
   "exports": {
     ".": "./dist/index.js",
