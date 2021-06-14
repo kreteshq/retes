@@ -6,7 +6,7 @@ const debug = Debug("retes:routing"); // eslint-disable-line no-unused-vars
 
 import querystring from "querystring";
 import { parse } from "url";
-import Busboy from "busboy";
+import formidable from "formidable";
 
 import { isObject, parseCookies, parseAcceptHeader, toBuffer } from "./util";
 import { Router } from "./router";
@@ -47,51 +47,40 @@ const handleRequest = async (request: Request) => {
   request.cookies = parseCookies(headers.cookie);
   request.format = format ? format : parseAcceptHeader(headers);
 
-  const buffer = await toBuffer(request.body);
-  if (buffer.length > 0) {
-    const contentType = headers["content-type"]?.split(";")[0];
+  const contentType = headers["content-type"]?.split(";")[0];
 
-    switch (contentType) {
-      case "application/x-www-form-urlencoded":
-        Object.assign(params, querystring.parse(buffer.toString()));
-        break;
-      case "application/json": {
-        const result = JSON.parse(buffer.toString());
-        if (isObject(result)) {
-          Object.assign(params, result);
-        }
-        break;
+  switch (contentType) {
+    case "application/x-www-form-urlencoded":
+      const buffer = await toBuffer(request.body);
+      Object.assign(params, querystring.parse(buffer.toString()));
+      break;
+    case "application/json": {
+      const buffer = await toBuffer(request.body);
+      const result = JSON.parse(buffer.toString());
+      if (isObject(result)) {
+        Object.assign(params, result);
       }
-      case "multipart/form-data": {
-        request.files = {};
-
-        const busboy = new Busboy({ headers });
-
-        busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
-          file.on("data", (data) => {
-            request.files = {
-              ...request.files,
-              [fieldname]: {
-                name: filename,
-                length: data.length,
-                data,
-                encoding,
-                mimetype,
-              },
-            };
-          });
-          file.on("end", () => {});
-        });
-        busboy.on("field", (fieldname, val) => {
-          request.params = { ...request.params, [fieldname]: val };
-        });
-        busboy.end(buffer);
-
-        await new Promise((resolve) => busboy.on("finish", resolve));
-
-        break;
-      }
-      default:
+      break;
     }
+    case "multipart/form-data": {
+      request.files = {};
+
+      const form = formidable({ multiples: true });
+      const { fields, files } = await new Promise((resolve) => {
+        form.parse(request.body, (error, fields, files) => {
+          if (error) {
+            // FIXME
+            resolve({ fields: {}, files: {} });
+          }
+          resolve({ fields, files });
+        });
+      });
+
+      request.files = files;
+      request.params = { ...request.params, ...fields };
+
+      break;
+    }
+    default:
   }
 };
