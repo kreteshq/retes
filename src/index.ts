@@ -5,10 +5,10 @@ import Debug from "debug";
 const debug = Debug("retes:index"); // eslint-disable-line no-unused-vars
 
 import http from "http";
+import { createHttpTerminator } from "http-terminator";
 import { Router } from "./router";
 import { handle } from "./core";
 import { Routing } from "./routing";
-import { getServerStopFunc } from "./graceful-stop";
 import { NotFound } from "./response";
 
 import type { AddressInfo } from "net";
@@ -113,6 +113,7 @@ export class ServerApp {
   middlewares: Array<Middleware>;
   routes: Routes;
   routePaths: Object;
+  gracefulTerminationTimeout?: number;
   stop: () => Promise<void>;
   handleError: (request: Request) => (error: Error) => void;
   append: (request: Request) => () => void;
@@ -132,16 +133,18 @@ export class ServerApp {
     append = (context) => () => {},
     custom = (request, response, next) => {
       next();
-    }
+    },
+    gracefulTerminationTimeout: number = 500
   ) {
     this.middlewares = middlewares;
     this.router = new Router();
     this.routes = routes;
     this.routePaths = {};
-    this.stop = () => Promise.reject(`You should start the server first`);
+    this.stop = () => Promise.reject(`You need to start the server first`);
     this.handleError = handleError;
     this.append = append;
     this.custom = custom;
+    this.gracefulTerminationTimeout = gracefulTerminationTimeout;
 
     // TODO move it to `start` once it's abstracted
     for (const [path, params] of this.routes) {
@@ -217,7 +220,12 @@ export class ServerApp {
         process.exit(1);
       });
 
-    this.stop = getServerStopFunc(this.server);
+    const terminator = createHttpTerminator({
+      server: this.server,
+      gracefulTerminationTimeout: this.gracefulTerminationTimeout,
+    });
+
+    this.stop = () => terminator.terminate();
 
     return new Promise<http.Server>((resolve, reject) => {
       this.server?.listen(port, () => {
