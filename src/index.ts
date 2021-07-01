@@ -240,7 +240,7 @@ export class ServerApp {
   }
 }
 
-export {
+export type {
   Routes,
   Response,
   CompoundResponse,
@@ -250,9 +250,9 @@ export {
   Middleware,
   Handler,
   Pipeline,
-  handle,
-  route,
 };
+
+export { handle, route };
 
 export * as response from "./response";
 export { Routing } from "./routing";
