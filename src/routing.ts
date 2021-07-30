@@ -56,7 +56,14 @@ const handleRequest = async (request: Request) => {
       break;
     case "application/json": {
       const buffer = await toBuffer(request.body);
-      const result = JSON.parse(buffer.toString());
+      let result;
+
+      try {
+        result = JSON.parse(buffer.toString());
+      } catch (error) {
+        result = {};
+      }
+
       if (isObject(result)) {
         Object.assign(params, result);
       }
