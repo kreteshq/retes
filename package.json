@@ -1,6 +1,6 @@
 {
   "name": "retes",
-  "version": "0.20.1",
+  "version": "0.21.0",
   "description": "Typed, Declarative, Data-Driven Routing for Node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,7 +24,7 @@
     "ava": "^4.0.0",
     "axios": "^0.24.0",
     "form-data": "^4.0.0",
-    "typescript": "next"
+    "typescript": "4.5.4"
   },
   "exports": {
     ".": "./dist/index.js",
