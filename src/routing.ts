@@ -6,7 +6,7 @@ const debug = Debug("retes:routing"); // eslint-disable-line no-unused-vars
 
 import querystring from "querystring";
 import { parse } from "url";
-import formidable from "formidable";
+import busboy from "busboy";
 
 import { isObject, parseCookies, parseAcceptHeader, toBuffer } from "./util";
 import { Router } from "./router";
@@ -47,47 +47,61 @@ const handleRequest = async (request: Request) => {
   request.cookies = parseCookies(headers.cookie);
   request.format = format ? format : parseAcceptHeader(headers);
 
-  const contentType = headers["content-type"]?.split(";")[0];
+  const buffer = await toBuffer(request.body);
 
-  switch (contentType) {
-    case "application/x-www-form-urlencoded":
-      const buffer = await toBuffer(request.body);
-      Object.assign(params, querystring.parse(buffer.toString()));
-      break;
-    case "application/json": {
-      const buffer = await toBuffer(request.body);
-      let result;
+  if (buffer.length > 0) {
+    const contentType = headers["content-type"]?.split(";")[0];
 
-      try {
-        result = JSON.parse(buffer.toString());
-      } catch (error) {
-        result = {};
+    switch (contentType) {
+      case "application/x-www-form-urlencoded":
+        Object.assign(params, querystring.parse(buffer.toString()));
+        break;
+      case "application/json": {
+        let result;
+
+        try {
+          result = JSON.parse(buffer.toString());
+        } catch (error) {
+          result = {};
+        }
+
+        if (isObject(result)) {
+          Object.assign(params, result);
+        }
+        break;
       }
+      case "multipart/form-data": {
+        request.files = {};
 
-      if (isObject(result)) {
-        Object.assign(params, result);
-      }
-      break;
-    }
-    case "multipart/form-data": {
-      request.files = {};
+        const bb = busboy({ headers });
 
-      const form = formidable({ multiples: true });
-      const { fields, files } = await new Promise((resolve) => {
-        form.parse(request.body, (error, fields, files) => {
-          if (error) {
-            // FIXME
-            resolve({ fields: {}, files: {} });
-          }
-          resolve({ fields, files });
+        bb.on("file", (name, file, info) => {
+          const { filename, encoding, mime } = info;
+
+          file.on("data", (data) => {
+            request.files = {
+              ...request.files,
+              [name]: {
+                name: filename,
+                length: data.length,
+                data,
+                encoding,
+                mime,
+              },
+            };
+          });
+          file.on("close", () => {});
         });
-      });
+        bb.on("field", (name, val) => {
+          request.params = { ...request.params, [name]: val };
+        });
+        bb.end(buffer);
 
-      request.files = files;
-      request.params = { ...request.params, ...fields };
+        await new Promise((resolve) => bb.on("close", resolve));
 
-      break;
+        break;
+      }
+      default:
     }
-    default:
   }
 };
