@@ -14,8 +14,11 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": true
+  },
+  "clean-publish": {
+    "files": ["dist/**/*.spec.js"],
   },
   "include": [
     "src/**/*.ts"
