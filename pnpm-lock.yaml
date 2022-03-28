@@ -2,27 +2,27 @@ lockfileVersion: 5.3
 
 specifiers:
   '@types/debug': ^4.1.7
-  '@types/node': ^17.0.21
+  '@types/node': ^17.0.23
   ava: ^4.1.0
   axios: ^0.26.1
   busboy: ^1.5.0
-  debug: ^4.3.3
+  debug: ^4.3.4
   form-data: ^4.0.0
   http-terminator: ^3.2.0
-  typescript: 4.6.2
+  typescript: 4.6.3
 
 dependencies:
   busboy: 1.5.0
-  debug: 4.3.3
+  debug: 4.3.4
   http-terminator: 3.2.0
 
 devDependencies:
   '@types/debug': 4.1.7
-  '@types/node': 17.0.21
+  '@types/node': 17.0.23
   ava: 4.1.0
-  axios: 0.26.1_debug@4.3.3
+  axios: 0.26.1_debug@4.3.4
   form-data: 4.0.0
-  typescript: 4.6.2
+  typescript: 4.6.3
 
 packages:
 
@@ -57,8 +57,8 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: true
 
-  /@types/node/17.0.21:
-    resolution: {integrity: sha512-DBZCJbhII3r90XbQxI8Y9IjjiiOGlZ0Hr32omXIZvwwZ7p4DMMXGrKXVyPfuoBOri9XNtL0UK69jYIBIsRX3QQ==}
+  /@types/node/17.0.23:
+    resolution: {integrity: sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==}
     dev: true
 
   /acorn-walk/8.2.0:
@@ -185,10 +185,10 @@ packages:
       common-path-prefix: 3.0.0
       concordance: 5.0.4
       currently-unhandled: 0.4.1
-      debug: 4.3.3
+      debug: 4.3.4
       del: 6.0.0
       emittery: 0.10.1
-      figures: 4.0.0
+      figures: 4.0.1
       globby: 13.1.1
       ignore-by-default: 2.0.0
       indent-string: 5.0.0
@@ -211,15 +211,15 @@ packages:
       supertap: 3.0.1
       temp-dir: 2.0.0
       write-file-atomic: 4.0.1
-      yargs: 17.3.1
+      yargs: 17.4.0
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /axios/0.26.1_debug@4.3.3:
+  /axios/0.26.1_debug@4.3.4:
     resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
     dependencies:
-      follow-redirects: 1.14.9_debug@4.3.3
+      follow-redirects: 1.14.9_debug@4.3.4
     transitivePeerDependencies:
       - debug
     dev: true
@@ -405,8 +405,8 @@ packages:
       time-zone: 1.0.0
     dev: true
 
-  /debug/4.3.3:
-    resolution: {integrity: sha512-/zxw5+vh1Tfv+4Qn7a5nsbcJKPaSvCDhojn6FEl9vupwK2VCSDtEiEtqr8DFtzYFOdz63LBkxec7DYuc2jon6Q==}
+  /debug/4.3.4:
+    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
     engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
@@ -518,7 +518,7 @@ packages:
       '@nodelib/fs.walk': 1.2.8
       glob-parent: 5.1.2
       merge2: 1.4.1
-      micromatch: 4.0.4
+      micromatch: 4.0.5
     dev: true
 
   /fast-json-stable-stringify/2.1.0:
@@ -552,12 +552,12 @@ packages:
       reusify: 1.0.4
     dev: true
 
-  /figures/4.0.0:
-    resolution: {integrity: sha512-VnYcWq6H6F0qDN0QnorznBr0abEovifzUokmnezpKZBUbDmbLAt7LMryOp1TKFVxLxyNYkxEkCEADZR58U9oSw==}
+  /figures/4.0.1:
+    resolution: {integrity: sha512-rElJwkA/xS04Vfg+CaZodpso7VqBknOYbzi6I76hI4X80RUjkSxO2oAyPmGbuXUppywjqndOrQDl817hDnI++w==}
     engines: {node: '>=12'}
     dependencies:
       escape-string-regexp: 5.0.0
-      is-unicode-supported: 1.1.0
+      is-unicode-supported: 1.2.0
     dev: true
 
   /fill-range/7.0.1:
@@ -575,7 +575,7 @@ packages:
       path-exists: 5.0.0
     dev: true
 
-  /follow-redirects/1.14.9_debug@4.3.3:
+  /follow-redirects/1.14.9_debug@4.3.4:
     resolution: {integrity: sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==}
     engines: {node: '>=4.0'}
     peerDependencies:
@@ -584,7 +584,7 @@ packages:
       debug:
         optional: true
     dependencies:
-      debug: 4.3.3
+      debug: 4.3.4
     dev: true
 
   /form-data/4.0.0:
@@ -671,8 +671,8 @@ packages:
     dependencies:
       delay: 5.0.0
       p-wait-for: 3.2.0
-      roarr: 7.9.0
-      type-fest: 2.12.0
+      roarr: 7.11.0
+      type-fest: 2.12.1
     dev: false
 
   /ignore-by-default/2.0.0:
@@ -773,8 +773,8 @@ packages:
     resolution: {integrity: sha512-hvpoI6korhJMnej285dSg6nu1+e6uxs7zG3BYAm5byqDsgJNWwxzM6z6iZiAgQR4TJ30JmBTOwqZUw3WlyH3AQ==}
     dev: true
 
-  /is-unicode-supported/1.1.0:
-    resolution: {integrity: sha512-lDcxivp8TJpLG75/DpatAqNzOpDPSpED8XNtrpBHTdQ2InQ1PbW78jhwSxyxhhu+xbVSast2X38bwj8atwoUQA==}
+  /is-unicode-supported/1.2.0:
+    resolution: {integrity: sha512-wH+U77omcRzevfIG8dDhTS0V9zZyweakfD01FULl97+0EHiJTTZtJqxPSkIIo/SDPv/i07k/C9jAPY+jwLLeUQ==}
     engines: {node: '>=12'}
     dev: true
 
@@ -852,8 +852,8 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /micromatch/4.0.4:
-    resolution: {integrity: sha512-pRmzw/XUcwXGpD9aI9q/0XOwLNygjETJ8y0ao0wdqprrzDa4YnxLcz7fQRZr8voh8V10kGhABbNcHVk5wHgWwg==}
+  /micromatch/4.0.5:
+    resolution: {integrity: sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==}
     engines: {node: '>=8.6'}
     dependencies:
       braces: 3.0.2
@@ -1071,8 +1071,8 @@ packages:
       glob: 7.2.0
     dev: true
 
-  /roarr/7.9.0:
-    resolution: {integrity: sha512-5im3jnQ7Xqatd4gky4blAC3TQRg0EE1syEc13KYe9LpGuMPlhGCZ3/WW1Eq2hykEHEjArp32KCsvpt9YN6FjXA==}
+  /roarr/7.11.0:
+    resolution: {integrity: sha512-DKiMaEYHoOZ0JyD4Ohr5KRnqybQ162s3ZL/WNO9oy6EUszYvpp0eLYJErc/U4NI96HYnHsbROhFaH4LYuJPnDg==}
     engines: {node: '>=12.0'}
     dependencies:
       boolean: 3.2.0
@@ -1214,13 +1214,13 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /type-fest/2.12.0:
-    resolution: {integrity: sha512-Qe5GRT+n/4GoqCNGGVp5Snapg1Omq3V7irBJB3EaKsp7HWDo5Gv2d/67gfNyV+d5EXD+x/RF5l1h4yJ7qNkcGA==}
+  /type-fest/2.12.1:
+    resolution: {integrity: sha512-AiknQSEqKVGDDjtZqeKrUoTlcj7FKhupmnVUgz6KoOKtvMwRGE6hUNJ/nVear+h7fnUPO1q/htSkYKb1pyntkQ==}
     engines: {node: '>=12.20'}
     dev: false
 
-  /typescript/4.6.2:
-    resolution: {integrity: sha512-HM/hFigTBHZhLXshn9sN37H085+hQGeJHJ/X7LpBWLID/fbc2acUMfU+lGD98X81sKP+pFa9f0DZmCwB9GnbAg==}
+  /typescript/4.6.3:
+    resolution: {integrity: sha512-yNIatDa5iaofVozS/uQJEl3JRWLKKGJKh6Yaiv0GLGSuhpFJe7P3SbHZ8/yjAHRQwKRoA6YZqlfjXWmVzoVSMw==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
@@ -1271,8 +1271,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /yargs/17.3.1:
-    resolution: {integrity: sha512-WUANQeVgjLbNsEmGk20f+nlHgOqzRFpiGWVaBrYGYIGANIIu3lWjoyi0fNlFmJkvfhCZ6BXINe7/W2O2bV4iaA==}
+  /yargs/17.4.0:
+    resolution: {integrity: sha512-WJudfrk81yWFSOkZYpAZx4Nt7V4xp7S/uJkX0CnxovMCt1wCE8LNftPpNuF9X/u9gN5nsD7ycYtRcDf2pL3UiA==}
     engines: {node: '>=12'}
     dependencies:
       cliui: 7.0.4
