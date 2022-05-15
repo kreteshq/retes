@@ -1,7 +1,7 @@
 {
   "name": "retes",
   "version": "0.23.0",
-  "description": "Typed, Declarative, Data-Driven Routing for Node.js",
+  "description": "Universal HTTP library for Node.js, Deno & Serverless (Cloudflare, Vercel, Netlify)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
