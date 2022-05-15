@@ -1,9 +1,6 @@
 // Copyright Zaiste. All rights reserved.
 // Licensed under the Apache License, Version 2.0
 
-import Debug from "debug";
-const debug = Debug("retes:routing"); // eslint-disable-line no-unused-vars
-
 import querystring from "querystring";
 import { parse } from "url";
 import busboy from "busboy";

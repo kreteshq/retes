@@ -1,9 +1,6 @@
 // Copyright Zaiste. All rights reserved.
 // Licensed under the Apache License, Version 2.0
 
-import Debug from "debug";
-const debug = Debug("retes:index"); // eslint-disable-line no-unused-vars
-
 import http from "http";
 import { createHttpTerminator } from "http-terminator";
 import { Router } from "./router";
