@@ -68,15 +68,15 @@ export function HTMLString(content: string): Response {
   };
 }
 
-export function HTMLStream(content): Response {
-  const Readable = require("stream").Readable;
+// export function HTMLStream(content): Response {
+//   const Readable = require("stream").Readable;
 
-  const s = new Readable();
-  s.push(content);
-  s.push(null);
+//   const s = new Readable();
+//   s.push(content);
+//   s.push(null);
 
-  return s;
-}
+//   return s;
+// }
 
 export function JavaScriptString(content: string): Response {
   return {

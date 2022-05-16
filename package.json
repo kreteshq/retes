@@ -1,16 +1,15 @@
 {
   "name": "retes",
-  "version": "0.23.0",
+  "version": "0.23.0--DEV",
   "description": "Universal HTTP library for Node.js, Deno & Serverless (Cloudflare, Vercel, Netlify)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "prepublishOnly": "tsc",
+    "prepublishOnly": "pnpm build && cp package.json dist/",
     "watch": "tsc -w",
-    "build": "tsc",
-    "test": "ava",
-    "test-watch": "ava --watch",
-    "publish": "clean-publish"
+    "build": "tsup-node src/* --format esm,cjs --dts",
+    "test": "uvu -r tsm spec",
+    "test-watch": "watchlist  src spec -- pnpm test"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -19,22 +18,29 @@
     "http-terminator": "^3.2.0"
   },
   "devDependencies": {
-    "@types/node": "^17.0.33",
-    "ava": "^4.2.0",
+    "@types/node": "^17.0.34",
     "axios": "^0.27.2",
-    "clean-publish": "^4.0.0",
     "form-data": "^4.0.0",
-    "typescript": "4.7.1-rc"
+    "tsm": "^2.2.1",
+    "tsup": "^5.12.8",
+    "typescript": "4.7.1-rc",
+    "uvu": "^0.5.3",
+    "watchlist": "^0.3.1"
   },
-  "files": ["dist"],
   "exports": {
-    ".": "./dist/index.js",
-    "./response": "./dist/response/index.js"
+    "./package.json": "./package.json",
+    "./response": {
+      "types": "./dist/response.d.ts",
+      "import": "./dist/response.mjs",
+      "require": "./dist/response.js"
+    },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
   },
-  "clean-publish": {
-    "files": [
-      "index.spec.js",
-      "index.spec.d.ts"
-    ]
+  "publishConfig": {
+    "directory": "dist"
   }
 }

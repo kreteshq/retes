@@ -1,13 +1,13 @@
-import test from "ava";
+import { test } from "uvu";
+import * as assert from 'uvu/assert';
+
 import axios, { AxiosInstance } from "axios";
 import FormData from "form-data";
 
-import { route, ServerApp } from ".";
-import { OK, Created, HTMLString } from "./response";
+import { route, ServerApp } from "../src";
+import { OK, Created, HTMLString } from "../src/response";
 
-import type { Next, Request } from "./types";
-
-const { before, after } = test;
+import type { Next, Request } from "../src/types";
 
 const { GET, POST, PUT, DELETE } = route;
 
@@ -68,14 +68,14 @@ const routes = [].concat(GETs, POSTs, PUTs, DELETEs, Compositions);
 let http: AxiosInstance;
 let server: ServerApp;
 
-before(async () => {
+test.before(async () => {
   server = new ServerApp(routes);
   await server.start();
 
   http = axios.create({ baseURL: `http://localhost:${server.port}` });
 });
 
-after(async () => {
+test.after(async () => {
   await server.stop();
 });
 
@@ -83,7 +83,7 @@ after(async () => {
 // T E S T S
 //
 
-test("the most simple routes", async (assert) => {
+test("the most simple routes", async () => {
   const { data: d1 } = await http.get("/");
   assert.is(d1, "Hello, GET!");
 
@@ -97,44 +97,44 @@ test("the most simple routes", async (assert) => {
   assert.is(d4, "Hello, DELETE!");
 });
 
-test("returns string with implicit return", async (assert) => {
+test("returns string with implicit return", async () => {
   const { status, data } = await http.get("/");
   assert.is(status, 200);
   assert.is(data, "Hello, GET!");
 });
 
-test("returns json for explicit response", async (assert) => {
+test("returns json for explicit response", async () => {
   const { status, data } = await http.get("/json-explicit-response");
   assert.is(status, 200);
-  assert.deepEqual(data, { hello: "Kretes" });
+  assert.equal(data, { hello: "Kretes" });
 });
 
-test("returns json for `OK` helper response", async (assert) => {
+test("returns json for `OK` helper response", async () => {
   const { status, data } = await http.get("/json-helper-response");
   assert.is(status, 200);
-  assert.deepEqual(data, { hello: "Kretes" });
+  assert.equal(data, { hello: "Kretes" });
 });
 
-test("returns json for `created` helper response", async (assert) => {
+test("returns json for `created` helper response", async () => {
   const { status, data, headers } = await http.get("/json-created-response");
   assert.is(status, 201);
   assert.is(headers["content-type"], "application/json");
-  assert.deepEqual(data, { status: "Created!" });
+  assert.equal(data, { status: "Created!" });
 });
 
-test("returns route params", async (assert) => {
+test("returns route params", async () => {
   const { data, status } = await http.get("/route-params/Kretes");
   assert.is(status, 200);
-  assert.deepEqual(data, { hello: "Kretes" });
+  assert.equal(data, { hello: "Kretes" });
 });
 
-test("returns query params", async (assert) => {
+test("returns query params", async () => {
   const { status, data } = await http.get("/query-params?search=Kretes");
   assert.is(status, 200);
-  assert.deepEqual(data, { search: "Kretes" });
+  assert.equal(data, { search: "Kretes" });
 });
 
-test("returns HTML content", async (assert) => {
+test("returns HTML content", async () => {
   const { data, status, headers } = await http.get("/html-content");
   assert.is(status, 200);
   assert.is(headers["content-type"], "text/html");
@@ -144,7 +144,7 @@ test("returns HTML content", async (assert) => {
   );
 });
 
-test("respects `Accept` header", async (assert) => {
+test("respects `Accept` header", async () => {
   const { data, status } = await http.get("/accept-header-1", {
     headers: {
       Accept: "text/plain",
@@ -154,13 +154,13 @@ test("respects `Accept` header", async (assert) => {
   assert.is(data, "plain");
 });
 
-test("respects explicit format query param", async (assert) => {
+test("respects explicit format query param", async () => {
   const { data, status } = await http.get("/explicit-format?format=csv");
   assert.is(status, 200);
   assert.is(data, "csv");
 });
 
-test("accepts POST params as JSON", async (assert) => {
+test("accepts POST params as JSON", async () => {
   const { status, data } = await http.post("/post-json", {
     name: "Retes via JSON",
   });
@@ -168,7 +168,7 @@ test("accepts POST params as JSON", async (assert) => {
   assert.is(data, "Received -> Retes via JSON");
 });
 
-test("accepts POST params as Form", async (assert) => {
+test("accepts POST params as Form", async () => {
   const { stringify } = require("querystring");
 
   const { status, data } = await http.post(
@@ -181,13 +181,13 @@ test("accepts POST params as Form", async (assert) => {
 
 // Compositions
 
-test("compose functions & return string", async (assert) => {
+test("compose functions & return string", async () => {
   const { status, data } = await http.get("/simple-compose");
   assert.is(status, 200);
   assert.is(data, "Simple Compose");
 });
 
-test("compose functions & append string", async (assert) => {
+test("compose functions & append string", async () => {
   const { status, data } = await http.get("/prepend-compose");
   assert.is(status, 200);
   assert.is(data, "Prefix -> Prepend Compose");
@@ -195,7 +195,7 @@ test("compose functions & append string", async (assert) => {
 
 // Errors
 
-test("render an error page for a non-existing route", async (assert) => {
+test("render an error page for a non-existing route", async () => {
   try {
     await http.get("/route-doesnt-exist-404");
   } catch (error) {
@@ -209,7 +209,7 @@ test("render an error page for a non-existing route", async (assert) => {
 
 // Varia
 
-test("receives file upload", async (assert) => {
+test("receives file upload", async () => {
   const fd = new FormData();
 
   fd.append("upload", "This is my upload", "foo.csv");
@@ -222,6 +222,8 @@ test("receives file upload", async (assert) => {
   assert.is(status, 200);
   assert.is(data, "Uploaded -> foo.csv");
 });
+
+// HERE ---
 
 /*
 
@@ -257,3 +259,5 @@ test('built-in validation strips undefined params', async assert => {
 
 
 */
+
+test.run();
