@@ -14,8 +14,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "busboy": "^1.6.0",
-    "http-terminator": "^3.2.0"
+    "busboy": "^1.6.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.34",

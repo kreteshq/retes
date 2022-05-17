@@ -2,11 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 import http from "http";
-import { createHttpTerminator } from "http-terminator";
 import { Router } from "./router";
 import { handle } from "./core";
 import { Routing } from "./routing";
 import { NotFound } from "./response";
+import { createHTTPTerminator } from "./terminator";
 
 import type { AddressInfo } from "net";
 import type {
@@ -217,9 +217,9 @@ export class ServerApp {
         process.exit(1);
       });
 
-    const terminator = createHttpTerminator({
+    const terminator = createHTTPTerminator({
       server: this.server,
-      gracefulTerminationTimeout: this.gracefulTerminationTimeout,
+      terminationTimeout: this.gracefulTerminationTimeout,
     });
 
     this.stop = () => terminator.terminate();
