@@ -11,8 +11,6 @@ import { createHTTPTerminator } from "./terminator";
 import type { AddressInfo } from "net";
 import type {
   Handler,
-  RouteOptions,
-  Route,
   Response,
   CompoundResponse,
   ResponseBody,
@@ -21,7 +19,6 @@ import type {
   Middleware,
   Request,
   Pipeline,
-  Meta,
 } from "./types";
 
 export const HTTPMethod = {
@@ -39,70 +36,6 @@ const compose =
   <T extends CallableFunction, U>(...functions: T[]) =>
   (args: U) =>
     functions.reduceRight((arg, fn) => fn(arg), args);
-
-function isPipeline(handler: Handler | Pipeline): handler is Pipeline {
-  return Array.isArray(handler);
-}
-
-function makeRoute(
-  name: HTTPMethod,
-  path: string,
-  handler: Handler | Pipeline,
-  middleware: Middleware[],
-  meta: Meta
-): Route {
-  if (isPipeline(handler)) {
-    const h = handler.pop() as Handler;
-    return [
-      path,
-      {
-        [name]: h,
-        middleware: [...middleware, ...(handler as Middleware[])],
-        meta,
-      },
-    ];
-  } else {
-    return [path, { [name]: handler, middleware, meta }];
-  }
-}
-
-const route = {
-  GET(
-    path: string,
-    handler: Handler | Pipeline,
-    { middleware = [], meta = {} }: RouteOptions = {}
-  ): Route {
-    return makeRoute("GET", path, handler, middleware, meta);
-  },
-  POST(
-    path: string,
-    handler: Handler | Pipeline,
-    { middleware = [], meta = {} }: RouteOptions = {}
-  ): Route {
-    return makeRoute("POST", path, handler, middleware, meta);
-  },
-  PATCH(
-    path: string,
-    handler: Handler | Pipeline,
-    { middleware = [], meta = {} }: RouteOptions = {}
-  ): Route {
-    return makeRoute("PATCH", path, handler, middleware, meta);
-  },
-  PUT(
-    path: string,
-    handler: Handler | Pipeline,
-    { middleware = [], meta = {} }: RouteOptions = {}
-  ): Route {
-    return makeRoute("PUT", path, handler, middleware, meta);
-  },
-  DELETE(
-    path: string,
-    handler: Handler | Pipeline,
-    { middleware = [], meta = {} }: RouteOptions = {}
-  ): Route {
-    return makeRoute("DELETE", path, handler, middleware, meta);
-  },
-};
 
 export class ServerApp {
   server: http.Server | undefined;
@@ -249,7 +182,7 @@ export type {
   Pipeline,
 };
 
-export { handle, route };
+export { handle };
 
 export * as response from "./response";
 export { Routing } from "./routing";

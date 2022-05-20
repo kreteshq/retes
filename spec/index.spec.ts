@@ -1,15 +1,13 @@
 import { test } from "uvu";
 import * as assert from 'uvu/assert';
-
 import axios, { AxiosInstance } from "axios";
 import FormData from "form-data";
 
-import { route, ServerApp } from "../src";
+import { ServerApp } from "../src";
 import { OK, Created, HTMLString } from "../src/response";
+import { GET, POST, PUT, DELETE } from "../src/route";
 
-import type { Next, Request } from "../src/types";
-
-const { GET, POST, PUT, DELETE } = route;
+import type { Handler, Request } from "../src/types";
 
 const ExplicitResponse = {
   statusCode: 200,
@@ -18,8 +16,8 @@ const ExplicitResponse = {
 };
 
 const identity = (_) => _;
-const prepend = (next: Next) => async (request: Request) =>
-  `Prefix -> ${await next(request)}`;
+const prepend = (handler: Handler) => async (request: Request) =>
+  `Prefix -> ${await handler(request)}`;
 
 //
 // R O U T E S
@@ -45,7 +43,7 @@ const POSTs = [
   POST("/post-json", ({ params: { name } }) => `Received -> ${name}`),
   POST("/post-form", ({ params: { name } }) => `Received -> ${name}`),
   POST("/upload", ({ files }) => {
-    return `Uploaded -> ${files.upload.name}`;
+    return `Uploaded -> ${files?.upload.name}`;
   }),
   POST("/", (_) => "Hello, POST!"),
 ];
@@ -59,7 +57,7 @@ const Compositions = [
   GET("/prepend-compose", (_) => "Prepend Compose", { middleware: [prepend] }),
 ];
 
-const routes = [].concat(GETs, POSTs, PUTs, DELETEs, Compositions);
+const routes = [...GETs, ...POSTs, ...PUTs, ...DELETEs, ...Compositions];
 
 //
 // B E F O R E  &  A F T E R
