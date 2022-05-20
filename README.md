@@ -55,10 +55,9 @@ Create `tsconfig.json` with the following content:
 Create `app.ts` with the following content:
 
 ```ts
-import { Route, ServerApp, Response } from 'retes';
-
-const { GET, POST } = Route;
-const { Created } = Response;
+import { ServerApp } from 'retes';
+import { GET, POST } from 'retes/route';
+import { Created } from 'retes/response'
 
 const routes = [
   GET("/", () => "Hello, World"),
@@ -107,9 +106,8 @@ Retes combines requests' query params, body params and segment params into `para
 
 ```ts
 import { Route, ServerApp, Response } from 'retes';
-
-const { GET, POST } = Route;
-const { OK } = Response;
+import { GET, POST } from 'retes/route';
+import { Created } from 'retes/response'
 
 const routes = [
   GET("/query-params", ({ params }) => OK(params)),
@@ -199,9 +197,8 @@ HTTP/1.1 200 OK
 
 ```ts
 import { Route, ServerApp, Response } from 'retes';
-
-const { GET } = Route;
-const { Created, OK, Accepted, InternalServerError } = Response;
+import { GET } from 'retes/route';
+import { Created, OK, Accepted, InternalServerError } from 'retes/response';
 
 const routes = [
   GET("/created", () => Created("payload")), // returns HTTP 201 Created
@@ -223,7 +220,8 @@ main()
 ### Middleware Composition on Per-Route Basis
 
 ```ts
-import { Route, ServerApp } from 'retes';
+import { ServerApp } from 'retes';
+import { GET } from 'retes/route'
 
 const { GET } = Route;
 
