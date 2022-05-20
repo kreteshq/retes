@@ -5,6 +5,7 @@ specifiers:
   '@types/node': ^17.0.35
   axios: ^0.27.2
   busboy: ^1.6.0
+  clean-publish: ^4.0.0
   form-data: ^4.0.0
   tsm: ^2.2.1
   tsup: ^5.12.8
@@ -19,6 +20,7 @@ devDependencies:
   '@types/busboy': 1.5.0
   '@types/node': 17.0.35
   axios: 0.27.2
+  clean-publish: 4.0.0
   form-data: 4.0.0
   tsm: 2.2.1
   tsup: 5.12.8_typescript@4.7.1-rc
@@ -147,6 +149,16 @@ packages:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /clean-publish/4.0.0:
+    resolution: {integrity: sha512-PcOxJSnPgncx/ANmgPw8hj9DDtdLHTxIc6Vh/yXCX7IA9w1oUSx2POL0Vno/7omhyrKxMKTpnRh2wlzwH5zaCw==}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
+      fast-glob: 3.2.11
+      lilconfig: 2.0.5
+      micromatch: 4.0.5
     dev: true
 
   /combined-stream/1.0.8:
