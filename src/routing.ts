@@ -73,7 +73,7 @@ const handleRequest = async (request: Request) => {
         const bb = busboy({ headers });
 
         bb.on("file", (name, file, info) => {
-          const { filename, encoding, mime } = info;
+          const { filename, encoding, mimeType } = info;
 
           file.on("data", (data) => {
             request.files = {
@@ -83,7 +83,7 @@ const handleRequest = async (request: Request) => {
                 length: data.length,
                 data,
                 encoding,
-                mime,
+                mimetype: mimeType,
               },
             };
           });
