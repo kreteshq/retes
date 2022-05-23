@@ -1,35 +1,38 @@
-import Stream from 'stream';
+import { ServerResponse } from 'http';
+import { ReadableStream } from 'stream/web';
 
-export const handle = (context: any) => (result: any) => {
+import type { BodyInit, Response, HeadersInit } from './types';
+
+interface ResponseContext {
+  response: ServerResponse
+}
+
+export const handle = (context: ResponseContext) => (result: Response) => {
   if (null === result || undefined === result)
     throw new Error('No return statement in the handler');
 
   let { response } = context;
 
-  let body, headers, type, encoding;
+  let body: BodyInit, headers: HeadersInit, type, encoding;
 
-  if (typeof result === 'string' || result instanceof Stream) {
-    body = result;
-  } else {
-    body = result.body;
-    headers = result.headers;
-    type = result.type;
-    encoding = result.encoding;
-  }
+  body = result.body;
+  headers = result.headers;
+  type = result.type;
+  encoding = result.encoding;
 
   if (body instanceof Function)
     throw new Error('You need to return a value not a function.')
 
-  Object.assign(
-    {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
-    },
-    headers
-  );
+  // Object.assign(
+  //   {
+  //     'Access-Control-Allow-Origin': '*',
+  //     'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+  //     'Access-Control-Allow-Headers': 'Content-Type'
+  //   },
+  //   headers
+  // );
 
-  response.statusCode = result.statusCode || 200;
+  response.statusCode = result.status || 200;
 
   for (var key in headers) {
     response.setHeader(key, headers[key]);
@@ -37,31 +40,30 @@ export const handle = (context: any) => (result: any) => {
 
   if (encoding) response.setHeader('Content-Encoding', encoding);
 
-  if (Buffer.isBuffer(body)) {
-    response.setHeader('Content-Type', type || 'application/octet-stream');
-    response.setHeader('Content-Length', body.length);
-    response.end(body);
+  // if (Buffer.isBuffer(body)) {
+  //   response.setHeader('Content-Type', type || 'application/octet-stream');
+  //   response.setHeader('Content-Length', body.length);
+  //   response.end(body);
+  //   return;
+  // }
+
+  if (body instanceof ReadableStream) {
+    // if (!response.getHeader('Content-Type'))
+    //   response.setHeader('Content-Type', type || 'text/html');
+    // body.pipe(response)
+
     return;
   }
 
-  if (body instanceof Stream) {
-    if (!response.getHeader('Content-Type'))
-      response.setHeader('Content-Type', type || 'text/html');
 
-    body.pipe(response);
-    return;
+  if (!response.getHeader('Content-Type')) {
+    response.setHeader('Content-Type', type || 'text/plain');
   }
 
-  let str = body;
+  // if (str instanceof Buffer) {
+  //   response.setHeader('Content-Length', Buffer.byteLength(str));
+  // }
 
-  if (typeof body === 'object' || typeof body === 'number') {
-    str = JSON.stringify(body);
-    response.setHeader('Content-Type', 'application/json');
-  } else {
-    if (!response.getHeader('Content-Type'))
-      response.setHeader('Content-Type', type || 'text/plain');
-  }
-
-  response.setHeader('Content-Length', Buffer.byteLength(str));
+  let str = typeof body === 'string' ? body : JSON.stringify(body);
   response.end(str);
 };

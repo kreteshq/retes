@@ -1,11 +1,13 @@
-import { ReadStream } from 'fs'
 import http from 'http';
+import { ReadableStream } from 'stream/web';
+import { Response } from './response';
+
+export type BodyInit = string | object | ReadableStream;
+export type HeadersInit = Record<string, string>;
 
 export interface Params {
   [name: string]: any
 }
-
-export type Next = (request?: Request) => Response | Promise<Response>;
 
 interface AnyValue {
   [name: string]: any
@@ -35,23 +37,9 @@ export interface Request<U = unknown> {
   context: AnyValue
 }
 
-export type ResponseBody = string | object;
-export type Resource = ResponseBody | undefined;
+export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 
-export interface CompoundResponse {
-  body: ResponseBody
-  statusCode: number
-  headers?: object
-  type?: string
-}
-
-export type Response =
-  | string
-  | CompoundResponse
-  | Buffer
-  | ReadStream;
-
-export type Handler = (request: Request) => Response | Promise<Response>;
+export type Handler = (request: Request) => MaybePromise<Response>; 
 export type Pipeline = [...Middleware[], Handler];
 
 export interface Meta {
@@ -61,7 +49,7 @@ export interface Meta {
   responses?: Object
 }
 
-export type Middleware = (handler: Handler) => (request: Request) => Response | Promise<Response>
+export type Middleware = (handler: Handler) => (request: Request) => MaybePromise<Response> 
 
 // export interface RoutePath {
 //   [name: HTTPMethod]: any
@@ -115,3 +103,5 @@ export interface KeyValue {
   name: string
   value: string
 }
+
+export { Response }

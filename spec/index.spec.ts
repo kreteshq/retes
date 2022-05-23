@@ -4,57 +4,61 @@ import axios, { AxiosInstance } from "axios";
 import FormData from "form-data";
 
 import { ServerApp } from "../src";
-import { OK, Created, HTMLString } from "../src/response";
+import { Response } from "../src/response";
 import { GET, POST, PUT, DELETE } from "../src/route";
+import { asHTML, asJSON } from '../src/middleware';
 
-import type { Handler, Request } from "../src/types";
+import type { Handler, Request, } from "../src/types";
 
-const ExplicitResponse = {
-  statusCode: 200,
+const ExplicitResponse: Response = {
+  status: 200,
   headers: {},
   body: { hello: "Kretes" },
 };
 
 const identity = (_) => _;
-const prepend = (handler: Handler) => async (request: Request) =>
-  `Prefix -> ${await handler(request)}`;
+const prepend = (handler: Handler) => async (request: Request) => {
+  const r = await handler(request);
+
+  return Response.OK(`Prefix -> ${r.body}`);
+}
 
 //
 // R O U T E S
 //
 
 const GETs = [
-  GET("/", (_) => "Hello, GET!"),
+  GET("/", (_) => new Response("Hello, GET!")),
   GET("/json-explicit-response", (_) => ExplicitResponse),
-  GET("/json-helper-response", (_) => OK({ hello: "Kretes" })),
-  GET("/json-created-response", (_) => Created({ status: "Created!" })),
-  GET("/route-params/:name", ({ params }) => OK({ hello: params.name })),
-  GET("/query-params", ({ params: { search } }) => OK({ search })),
-  GET("/html-content", (_) =>
-    HTMLString(
+  GET("/json-helper-response", [asJSON, (_) => Response.OK({ hello: "Kretes" })]),
+  GET("/json-created-response", [asJSON, (_) => Response.Created({ status: "Created!" })]),
+  GET("/route-params/:name", ({ params }) => Response.OK({ hello: params.name })),
+  GET("/query-params", ({ params: { search } }) => Response.OK({ search })),
+  GET("/html-content", [asHTML, (_) =>
+    Response.OK(
       "<h1>Retes - Typed, Declarative, Data-Driven Routing for Node.js</h1>"
     )
-  ),
-  GET("/accept-header-1", ({ format }) => OK(format)),
-  GET("/explicit-format", ({ format }) => OK(format)),
+  ]),
+  GET("/accept-header-1", ({ format }) => Response.OK(format)),
+  GET("/explicit-format", ({ format }) => Response.OK(format)),
 ];
 
 const POSTs = [
-  POST("/post-json", ({ params: { name } }) => `Received -> ${name}`),
-  POST("/post-form", ({ params: { name } }) => `Received -> ${name}`),
+  POST("/post-json", ({ params: { name } }) => Response.OK(`Received -> ${name}`)),
+  POST("/post-form", ({ params: { name } }) => Response.OK(`Received -> ${name}`)),
   POST("/upload", ({ files }) => {
-    return `Uploaded -> ${files?.upload.name}`;
+    return Response.OK(`Uploaded -> ${files?.upload.name}`);
   }),
-  POST("/", (_) => "Hello, POST!"),
+  POST("/", (_) => Response.OK("Hello, POST!")),
 ];
 
-const PUTs = [PUT("/", (_) => "Hello, PUT!")];
+const PUTs = [PUT("/", (_) => Response.OK("Hello, PUT!"))];
 
-const DELETEs = [DELETE("/", (_) => "Hello, DELETE!")];
+const DELETEs = [DELETE("/", (_) => Response.OK("Hello, DELETE!"))];
 
 const Compositions = [
-  GET("/simple-compose", (_) => "Simple Compose", { middleware: [identity] }),
-  GET("/prepend-compose", (_) => "Prepend Compose", { middleware: [prepend] }),
+  GET("/simple-compose", (_) => Response.OK("Simple Compose"), { middleware: [identity] }),
+  GET("/prepend-compose", (_) => Response.OK("Prepend Compose"), { middleware: [prepend] }),
 ];
 
 const routes = [...GETs, ...POSTs, ...PUTs, ...DELETEs, ...Compositions];

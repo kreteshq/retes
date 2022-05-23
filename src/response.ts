@@ -1,168 +1,164 @@
-import { Resource, Response, ResponseBody } from "./types";
+import type { BodyInit, HeadersInit } from "./types"
 
-//
-// 2xx
-//
-export function OK(body: ResponseBody, headers = {}): Response {
-  return { headers, body, statusCode: 200 };
+export class Response {
+  body: BodyInit 
+  status: number
+  statusText?: string
+  headers?: HeadersInit
+  type?: string
+  encoding?: string
+
+  constructor(body: string, { status = 200, headers = {} } = {}){
+    return { body, status, headers, };
+  }
+
+  static OK(body: BodyInit = "", headers = {}) {
+    return { body, status: 200, headers };
+  }
+
+  static Created(body: BodyInit = "", headers = {}) {
+    return { body, status: 201, headers };
+  }
+
+  static NotFound(headers = {}) {
+    return {
+      body: "Not Found",
+      status: 404,
+      type: "text/html",
+      headers,
+    };
+  }
 }
 
-export function Created(resource: Resource = "", headers = {}): Response {
-  return {
-    statusCode: 201,
-    headers,
-    body: resource,
-  };
+
+/*
+
+
+export function Accepted(body: BodyInit = "", headers = {}): CompoundResponse {
+  return { body, status: 202, headers };
 }
 
-export function Accepted(resource: Resource = "", headers = {}): Response {
-  return {
-    statusCode: 202,
-    headers,
-    body: resource,
-  };
+export function NoContent(headers = {}): CompoundResponse {
+  return { body: "", status: 204, headers };
 }
 
-export function NoContent(headers = {}): Response {
-  return {
-    statusCode: 204,
-    headers,
-    body: "",
-  };
+export function HTML(body: BodyInit): CompoundResponse {
+  return { body, status: 200, type: "text/html" };
 }
 
-export function Redirect(
-  url: string,
-  body = "Redirecting...",
-  statusCode = 302
-): Response {
-  return {
-    statusCode,
-    headers: { Location: url },
-    type: "text/plain",
-    body,
-  };
+export function JavaScript(body: BodyInit): CompoundResponse {
+  return { body, status: 200, type: "application/javascript" };
 }
 
-export function NotModified(headers = {}): Response {
-  return {
-    statusCode: 304,
-    headers,
-    body: "",
-  };
-}
-
-export function JSONPayload(content, statusCode = 200) {
-  return {
-    statusCode,
-    body: JSON.stringify(content),
-    type: "application/json",
-  };
-}
-
-export function HTMLString(content: string): Response {
-  return {
-    statusCode: 200,
-    type: "text/html",
-    body: content,
-  };
-}
-
-// export function HTMLStream(content): Response {
-//   const Readable = require("stream").Readable;
-
-//   const s = new Readable();
-//   s.push(content);
-//   s.push(null);
-
-//   return s;
-// }
-
-export function JavaScriptString(content: string): Response {
-  return {
-    statusCode: 200,
-    type: "application/javascript",
-    body: content,
-  };
-}
-
-export function StyleSheetString(content: string): Response {
-  return {
-    statusCode: 200,
-    type: "text/css",
-    body: content,
-  };
+export function CSS(body: BodyInit): CompoundResponse {
+  return { body, status: 200, type: "text/css" };
 }
 
 //
 // 4xx
 //
-export function BadRequest(): Response {
-  return {
-    statusCode: 400,
-    headers: {},
-    body: "",
-  };
+export function BadRequest(): CompoundResponse {
+  return { body: "", status: 400 };
 }
 
-export function Unauthorized(): Response {
-  return {
-    statusCode: 401,
-    headers: {},
-    body: "",
-  };
+export function Unauthorized(): CompoundResponse {
+  return { body: "", status: 401 };
 }
 
-export function Forbidden(content: string = ""): Response {
-  return {
-    statusCode: 403,
-    body: content,
-  };
+export function Forbidden(body: BodyInit = ""): CompoundResponse {
+  return { body, status: 403 };
 }
 
-export function NotFound(headers = {}): Response {
-  return {
-    statusCode: 404,
-    type: "text/html",
-    headers,
-    body: "Not Found",
-  };
+
+export function MethodNotAllowed(): CompoundResponse {
+  return { body: "", status: 405 };
 }
 
-export function MethodNotAllowed(): Response {
-  return {
-    statusCode: 405,
-    headers: {},
-    body: "",
-  };
+export function NotAcceptable(): CompoundResponse {
+  return { body: "", status: 406 };
 }
 
-export function NotAcceptable(): Response {
-  return {
-    statusCode: 406,
-    headers: {},
-    body: "",
-  };
-}
-
-export function Conflict(content: string = ""): Response {
-  return {
-    statusCode: 409,
-    body: content,
-  };
+export function Conflict(body: BodyInit = ""): CompoundResponse {
+  return { body, status: 409 };
 }
 
 //
 // 5xx
 //
 
-export function InternalServerError(
-  content: string = "",
-  { headers = {} } = {}
-): Response {
-  return {
-    statusCode: 500,
-    body: content,
-    headers,
-  };
+export function InternalServerError(body: BodyInit = "", headers = {}): CompoundResponse {
+  return { body, status: 500, headers };
 }
+
+export enum Status {
+  Continue = 100,
+  SwitchingProtocols = 101,
+  Processing = 102,
+  EarlyHints = 103,
+  OK = 200,
+  Created = 201,
+  Accepted = 202,
+  NonAuthoritativeInfo = 203,
+  NoContent = 204,
+  ResetContent = 205,
+  PartialContent = 206,
+  MultiStatus = 207,
+  AlreadyReported = 208,
+  IMUsed = 226,
+
+  MultipleChoices = 300,
+  MovedPermanently = 301,
+  Found = 302,
+  SeeOther = 303,
+  NotModified = 304,
+  UseProxy = 305,
+  TemporaryRedirect = 307,
+  PermanentRedirect = 308,
+
+  BadRequest = 400,
+  Unauthorized = 401,
+  PaymentRequired = 402,
+  Forbidden = 403,
+  NotFound = 404,
+  MethodNotAllowed = 405,
+  NotAcceptable = 406,
+  ProxyAuthRequired = 407,
+  RequestTimeout = 408,
+  Conflict = 409,
+  Gone = 410,
+  LengthRequired = 411,
+  PreconditionFailed = 412,
+  RequestEntityTooLarge = 413,
+  RequestURITooLong = 414,
+  UnsupportedMediaType = 415,
+  RequestedRangeNotSatisfiable = 416,
+  ExpectationFailed = 417,
+  Teapot = 418,
+  MisdirectedRequest = 421,
+  UnprocessableEntity = 422,
+  Locked = 423,
+  FailedDependency = 424,
+  TooEarly = 425,
+  UpgradeRequired = 426,
+  PreconditionRequired = 428,
+  TooManyRequests = 429,
+  RequestHeaderFieldsTooLarge = 431,
+  UnavailableForLegalReasons = 451,
+
+  InternalServerError = 500,
+  NotImplemented = 501,
+  BadGateway = 502,
+  ServiceUnavailable = 503,
+  GatewayTimeout = 504,
+  HTTPVersionNotSupported = 505,
+  VariantAlsoNegotiates = 506,
+  InsufficientStorage = 507,
+  LoopDetected = 508,
+  NotExtended = 510,
+  NetworkAuthenticationRequired = 511,
+}
+
+export enum ContentType {
+  Text = "text/html"
+}
+*/

@@ -5,16 +5,12 @@ import http from "http";
 import { Router } from "./router";
 import { handle } from "./core";
 import { Routing } from "./routing";
-import { NotFound } from "./response";
+import { Response } from "./response";
 import { createHTTPTerminator } from "./terminator";
 
 import type { AddressInfo } from "net";
 import type {
   Handler,
-  Response,
-  CompoundResponse,
-  ResponseBody,
-  Resource,
   Routes,
   Middleware,
   Request,
@@ -136,7 +132,7 @@ export class ServerApp {
         } as Request;
 
         const pipeline = compose<Middleware, Handler>(...this.middlewares)(
-          (_) => NotFound()
+          (_) => Response.NotFound()
         );
 
         const prepend = (next) => this.custom(request, response, next);
@@ -172,10 +168,6 @@ export class ServerApp {
 
 export type {
   Routes,
-  Response,
-  CompoundResponse,
-  Resource,
-  ResponseBody,
   Request,
   Middleware,
   Handler,

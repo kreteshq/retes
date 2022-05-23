@@ -30,6 +30,11 @@
   },
   "exports": {
     "./package.json": "./package.json",
+    "./middleware": {
+      "types": "./middleware.d.ts",
+      "import": "./middleware.mjs",
+      "require": "./middleware.js"
+    },
     "./response": {
       "types": "./response.d.ts",
       "import": "./response.mjs",
