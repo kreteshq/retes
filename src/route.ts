@@ -1,5 +1,3 @@
-import { HTTPMethod } from ".";
-
 import type {
   Handler,
   RouteOptions,
@@ -9,9 +7,9 @@ import type {
   Meta,
 } from "./types";
 
-function isPipeline(handler: Handler | Pipeline): handler is Pipeline {
-  return Array.isArray(handler);
-}
+import { HTTPMethod } from ".";
+import { isPipeline } from "./util";
+
 
 function makeRoute(
   name: HTTPMethod,

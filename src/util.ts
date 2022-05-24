@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 import type { Stream, Readable } from "stream";
+import type { Handler, Pipeline, ReversedPipeline } from "./types";
 
 export const print = (message: string) => {
   console.log(message);
@@ -74,3 +75,12 @@ export const parseAcceptHeader = ({ accept = "*/*" }) => {
 
   return format;
 };
+
+export function isPipeline(handler: Handler | Pipeline): handler is Pipeline {
+  return Array.isArray(handler);
+}
+
+export const composePipeline = (pipeline: Pipeline): Handler => {
+  const [action, ...middleware] = pipeline.reverse() as ReversedPipeline;
+  return compose(...middleware)(action)
+}

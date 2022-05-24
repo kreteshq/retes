@@ -41,6 +41,7 @@ export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 
 export type Handler = (request: Request) => MaybePromise<Response>; 
 export type Pipeline = [...Middleware[], Handler];
+export type ReversedPipeline = [Handler, ...Middleware[]];
 
 export interface Meta {
   summary?: string
