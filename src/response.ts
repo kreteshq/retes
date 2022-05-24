@@ -8,7 +8,7 @@ export class Response {
   type?: string
   encoding?: string
 
-  constructor(body: string, { status = 200, headers = {} } = {}){
+  constructor(body: BodyInit, { status = 200, headers = {} } = {}){
     return { body, status, headers, };
   }
 
@@ -21,74 +21,55 @@ export class Response {
   }
 
   static NotFound(headers = {}) {
-    return {
-      body: "Not Found",
-      status: 404,
-      type: "text/html",
-      headers,
-    };
+    return { body: "Not Found", status: 404, type: "text/html", headers };
   }
+
+  static Accepted(body: BodyInit = "", headers = {}) {
+    return { body, status: 202, headers };
+  }
+
+  static NoContent(headers = {}) {
+    return { body: "", status: 204, headers };
+  }
+
+  //
+  // 4xx
+  //
+
+  static BadRequest() {
+    return { body: "", status: 400 };
+  }
+
+  static Unauthorized() {
+    return { body: "", status: 401 };
+  }
+
+  static Forbidden(body: BodyInit = "") {
+    return { body, status: 403 };
+  }
+
+  static MethodNotAllowed() {
+    return { body: "", status: 405 };
+  }
+
+  static NotAcceptable() {
+    return { body: "", status: 406 };
+  }
+
+  static Conflict(body: BodyInit = "") {
+    return { body, status: 409 };
+  }
+
+  //
+  // 5xx
+  //
+
+  static InternalServerError(body: BodyInit = "", headers = {}) {
+    return { body, status: 500, headers };
+  }
+
 }
 
-
-/*
-
-
-export function Accepted(body: BodyInit = "", headers = {}): CompoundResponse {
-  return { body, status: 202, headers };
-}
-
-export function NoContent(headers = {}): CompoundResponse {
-  return { body: "", status: 204, headers };
-}
-
-export function HTML(body: BodyInit): CompoundResponse {
-  return { body, status: 200, type: "text/html" };
-}
-
-export function JavaScript(body: BodyInit): CompoundResponse {
-  return { body, status: 200, type: "application/javascript" };
-}
-
-export function CSS(body: BodyInit): CompoundResponse {
-  return { body, status: 200, type: "text/css" };
-}
-
-//
-// 4xx
-//
-export function BadRequest(): CompoundResponse {
-  return { body: "", status: 400 };
-}
-
-export function Unauthorized(): CompoundResponse {
-  return { body: "", status: 401 };
-}
-
-export function Forbidden(body: BodyInit = ""): CompoundResponse {
-  return { body, status: 403 };
-}
-
-
-export function MethodNotAllowed(): CompoundResponse {
-  return { body: "", status: 405 };
-}
-
-export function NotAcceptable(): CompoundResponse {
-  return { body: "", status: 406 };
-}
-
-export function Conflict(body: BodyInit = ""): CompoundResponse {
-  return { body, status: 409 };
-}
-
-//
-// 5xx
-//
-
-export function InternalServerError(body: BodyInit = "", headers = {}): CompoundResponse {
-  return { body, status: 500, headers };
-}
 
 export enum Status {
   Continue = 100,
@@ -157,8 +138,3 @@ export enum Status {
   NotExtended = 510,
   NetworkAuthenticationRequired = 511,
 }
-
-export enum ContentType {
-  Text = "text/html"
-}
-*/
