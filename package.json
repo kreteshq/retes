@@ -5,9 +5,9 @@
   "types": "index.d.ts",
   "main": "index.js",
   "scripts": {
-    "prepublishOnly": "pnpm build && clear-package-json package.json -o dist/package.json --fields publishConfig",
+    "prepublishOnly": "pnpm build",
     "watch": "tsc -w",
-    "build": "tsup-node src/* --format esm,cjs --dts",
+    "build": "tsup-node src/* --format esm,cjs --dts && clear-package-json package.json -o dist/package.json --fields publishConfig",
     "test": "uvu -r tsm spec",
     "test-watch": "watchlist src spec -- pnpm test"
   },
@@ -59,5 +59,8 @@
   },
   "publishConfig": {
     "directory": "dist"
+  },
+  "clean-publish": {
+    "files": ["dist/**/*.spec.js"]
   }
 }
