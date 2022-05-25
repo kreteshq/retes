@@ -14,7 +14,7 @@ interface AnyValue {
 }
 export interface Request<U = unknown> {
   params: Params
-  headers?: {
+  headers: {
     [name: string]: any
   }
   files?: {
@@ -28,10 +28,11 @@ export interface Request<U = unknown> {
   }
   cookies?: object
   user?: U 
+  host: string;
   url: string
-  path: string
   method: string
-  format: string
+  path?: string
+  format?: string
   body: http.IncomingMessage
   response: http.ServerResponse
   context: AnyValue

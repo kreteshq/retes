@@ -124,6 +124,7 @@ export class ServerApp {
         const { method, url, headers } = request;
         const context = {
           params: {},
+          context: {},
           headers,
           method,
           url,

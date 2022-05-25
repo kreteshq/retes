@@ -3,14 +3,19 @@ import type { NextApiHandler, NextApiRequest } from 'next';
 import { composePipeline, isPipeline } from "./util";
 
 const fromNextRequest = (req: NextApiRequest): Request => {
-  const { method, url, headers } = req;
-  const request = {
+  const { method, url, headers = {} } = req;
+  const { host } = headers;
+  const request: Request = {
     params: {},
+    context: {},
     headers,
+    host,
     method,
     url,
-    body: req.body
-  } as Request;
+    body: req.body,
+    // FIXME
+    response: null
+  };
 
   return request;
 }
