@@ -36,8 +36,8 @@ export class Response {
   // 4xx
   //
 
-  static BadRequest() {
-    return { body: "", status: 400 };
+  static BadRequest(body: BodyInit = "") {
+    return { body, status: 400 };
   }
 
   static Unauthorized() {
