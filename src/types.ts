@@ -1,4 +1,5 @@
 import http from 'http';
+import { HTTPMethod } from './';
 import { ReadableStream } from 'stream/web';
 import { Response } from './response';
 
@@ -30,7 +31,7 @@ export interface Request<U = unknown> {
   user?: U 
   host: string;
   url: string
-  method: string
+  method: HTTPMethod 
   path?: string
   format?: string
   body: http.IncomingMessage
