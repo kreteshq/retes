@@ -1,16 +1,22 @@
-import type { Handler, Pipeline, Request } from "./types";
 import type { NextApiHandler, NextApiRequest } from 'next';
-import { composePipeline, isPipeline } from "./util";
+import type { Handler, Pipeline, Request } from "./types";
+import type { HTTPMethod } from "./";
+
+import querystring from 'querystring';
+import { isObject, composePipeline, isPipeline } from "./util";
 
 const fromNextRequest = (req: NextApiRequest): Request => {
-  const { method, url, headers = {} } = req;
+  const { method, url, headers = {}, body } = req;
   const { host } = headers;
+
+  const params = Object.assign({}, body); // to fix the `[Object: null prototype]` warning
+
   const request: Request = {
-    params: {},
+    params,
     context: {},
     headers,
     host,
-    method,
+    method: method as HTTPMethod,
     url,
     body: req.body,
     // FIXME
