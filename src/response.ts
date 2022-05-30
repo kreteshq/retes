@@ -12,6 +12,9 @@ export class Response {
     return { body, status, headers, };
   }
 
+  //
+  // 2xx
+  //
   static OK(body: BodyInit = "", headers = {}) {
     return { body, status: 200, headers };
   }
@@ -30,6 +33,21 @@ export class Response {
 
   static NoContent(headers = {}) {
     return { body: "", status: 204, headers };
+  }
+
+  //
+  // 3xx
+  //
+
+  static Redirect(url: string, status = 302, headers = {}) {
+    return { 
+      body: "Redirecting...", 
+      status, 
+      headers: {
+        ...headers,
+        Location: url
+      }
+    };
   }
 
   //
