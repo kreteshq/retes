@@ -1,5 +1,5 @@
 import { ServerResponse } from 'http';
-import { ReadableStream } from 'stream/web';
+import { Readable } from 'stream';
 
 import type { BodyInit, Response, HeadersInit } from './types';
 
@@ -47,7 +47,7 @@ export const handle = (context: ResponseContext) => (result: Response) => {
   //   return;
   // }
 
-  if (body instanceof ReadableStream) {
+  if (body instanceof Readable) {
     // if (!response.getHeader('Content-Type'))
     //   response.setHeader('Content-Type', type || 'text/html');
     // body.pipe(response)

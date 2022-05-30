@@ -1,9 +1,9 @@
 import http from 'http';
 import { HTTPMethod } from './';
-import { ReadableStream } from 'stream/web';
+import { Readable } from 'stream';
 import { Response } from './response';
 
-export type BodyInit = string | object | ReadableStream;
+export type BodyInit = string | object | Readable;
 export type HeadersInit = Record<string, string>;
 
 export interface Params {
