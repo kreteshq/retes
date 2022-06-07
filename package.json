@@ -4,6 +4,11 @@
   "description": "Universal HTTP library for Node.js, Deno & Serverless (Cloudflare, Vercel, Netlify)",
   "types": "index.d.ts",
   "main": "index.js",
+  "repository": "github:kreteshq/retes",
+  "homepage": "https://github.com/kreteshq/retes",
+  "bugs": {
+    "url": "https://github.com/kreteshq/retes/issues"
+  },
   "scripts": {
     "prepublishOnly": "pnpm build",
     "watch": "tsc -w",
