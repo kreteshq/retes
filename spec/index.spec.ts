@@ -23,6 +23,27 @@ const prepend = (handler: Handler) => async (request: Request) => {
   return Response.OK(`Prefix -> ${r.body}`);
 }
 
+const A = (handler: Handler) => async (request: Request) => {
+  request.context.order = [...request.context.order || [], 'pre-A']
+  const r = await handler(request);
+
+  return { ...r, body: `${r.body} - post-A`}; 
+}
+
+const B = (handler: Handler) => async (request: Request) => {
+  request.context.order = [...request.context.order || [], 'pre-B']
+  const r = await handler(request);
+
+  return { ...r, body: `${r.body} - post-B`}; 
+}
+
+const C = (handler: Handler) => async (request: Request) => {
+  request.context.order = [...request.context.order || [], 'pre-C']
+  const r = await handler(request);
+
+  return { ...r, body: `${r.body} - post-C`}; 
+}
+
 //
 // R O U T E S
 //
@@ -59,6 +80,8 @@ const DELETEs = [DELETE("/", (_) => Response.OK("Hello, DELETE!"))];
 const Compositions = [
   GET("/simple-compose", (_) => Response.OK("Simple Compose"), { middleware: [identity] }),
   GET("/prepend-compose", (_) => Response.OK("Prepend Compose"), { middleware: [prepend] }),
+  GET("/A-B-C-order", (_) => Response.OK(`${_.context.order.join(" - ")} - ABC`), { middleware: [A, B, C] }),
+
 ];
 
 const routes = [...GETs, ...POSTs, ...PUTs, ...DELETEs, ...Compositions];
@@ -193,6 +216,12 @@ test("compose functions & append string", async () => {
   const { status, data } = await http.get("/prepend-compose");
   assert.is(status, 200);
   assert.is(data, "Prefix -> Prepend Compose");
+});
+
+test("compose middleware and their order", async () => {
+  const { status, data } = await http.get("/A-B-C-order");
+  assert.is(status, 200);
+  assert.is(data, "pre-A - pre-B - pre-C - ABC - post-C - post-B - post-A");
 });
 
 // Errors
