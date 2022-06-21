@@ -15,7 +15,7 @@ export function isObject(_: Object) {
 export const compose =
   <T extends Function>(...functions: T[]) =>
   (args) =>
-    functions.reduceRight((arg, fn) => fn(arg), args);
+    functions.reduce((arg, fn) => fn(arg), args);
 
 export const toBuffer = async (stream: Readable) => {
   const chunks = [];

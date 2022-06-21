@@ -7,6 +7,8 @@ import { ServerApp } from "../src";
 import { Response } from "../src/response";
 import { GET, POST, PUT, DELETE } from "../src/route";
 import { asHTML, asJSON } from '../src/middleware';
+import { toNextHandler } from "../src/adapter";
+import { createMocks } from "node-mocks-http";
 
 import type { Handler, Request, } from "../src/types";
 
@@ -223,6 +225,34 @@ test("receives file upload", async () => {
   const { status, data } = await http.post("/upload", fd, options);
   assert.is(status, 200);
   assert.is(data, "Uploaded -> foo.csv");
+});
+
+// Adapters
+
+test("Order of middlewares in Next adapter", async () => {
+  const simpleHandler = (request) => Response.OK((request.context.preprocessedBody || "") + "ABC");
+
+  const middlewaresFactory = (name: string) => {
+    const middleware = (handler: Handler) => async (request: Request) => {
+      request.context.preprocessedBody = (request.context.preprocessedBody || "") + `pre-${name} = `;
+      const response = await handler(request);
+      return Response.OK(response.body + ` = post-${name}`);
+    };
+    return middleware;
+  };
+
+  const nextHandler = toNextHandler([
+    middlewaresFactory("A"),
+    middlewaresFactory("B"),
+    middlewaresFactory("C"),
+    simpleHandler,
+  ]);
+
+  const { req, res } = createMocks();
+
+  await nextHandler(req, res);
+
+  assert.is(res._getData(), "pre-A = pre-B = pre-C = ABC = post-C = post-B = post-A");
 });
 
 // HERE ---
