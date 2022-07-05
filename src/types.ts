@@ -28,20 +28,21 @@ export interface Request<U = unknown> {
     }
   }
   cookies?: object
-  user?: U 
+  user?: U
   host: string;
   url: string
-  method: HTTPMethod 
+  method: HTTPMethod
   path?: string
   format?: string
   body: http.IncomingMessage
+  rawBody?: string
   response: http.ServerResponse
   context: AnyValue
 }
 
 export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 
-export type Handler = (request: Request) => MaybePromise<Response>; 
+export type Handler = (request: Request) => MaybePromise<Response>;
 export type Pipeline = [...Middleware[], Handler];
 export type ReversedPipeline = [Handler, ...Middleware[]];
 
@@ -52,7 +53,7 @@ export interface Meta {
   responses?: Object
 }
 
-export type Middleware = (handler: Handler) => (request: Request) => MaybePromise<Response> 
+export type Middleware = (handler: Handler) => (request: Request) => MaybePromise<Response>
 
 // export interface RoutePath {
 //   [name: HTTPMethod]: any
