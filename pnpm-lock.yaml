@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@types/busboy': ^1.5.0
-  '@types/node': ^18.0.1
+  '@types/node': ^18.0.3
   axios: ^0.27.2
   busboy: ^1.6.0
   form-data: ^4.0.0
@@ -19,7 +19,7 @@ dependencies:
 
 devDependencies:
   '@types/busboy': 1.5.0
-  '@types/node': 18.0.1
+  '@types/node': 18.0.3
   axios: 0.27.2
   form-data: 4.0.0
   next: 12.2.0
@@ -183,11 +183,11 @@ packages:
   /@types/busboy/1.5.0:
     resolution: {integrity: sha512-ncOOhwmyFDW76c/Tuvv9MA9VGYUCn8blzyWmzYELcNGDb0WXWLSmFi7hJq25YdRBYJrmMBB5jZZwUjlJe9HCjQ==}
     dependencies:
-      '@types/node': 18.0.1
+      '@types/node': 18.0.3
     dev: true
 
-  /@types/node/18.0.1:
-    resolution: {integrity: sha512-CmR8+Tsy95hhwtZBKJBs0/FFq4XX7sDZHlGGf+0q+BRZfMbOTkzkj0AFAuTyXbObDIoanaBBW0+KEW+m3N16Wg==}
+  /@types/node/18.0.3:
+    resolution: {integrity: sha512-HzNRZtp4eepNitP+BD6k2L6DROIDG4Q0fm4x+dwfsr6LGmROENnok75VGw40628xf+iR24WeMFcHuuBDUAzzsQ==}
     dev: true
 
   /accepts/1.3.8:
