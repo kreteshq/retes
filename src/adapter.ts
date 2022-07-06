@@ -83,8 +83,6 @@ const fromNextRequest = async (req: NextApiRequest): Promise<Request> => {
 	const body = req.body || bodies.body;
 	const params = Object.assign({}, body || {}); // to fix the `[Object: null prototype]` warning
 
-	console.log('asdf')
-
 	const request: Request = {
 		params,
 		context: {},
