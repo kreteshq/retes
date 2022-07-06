@@ -12,7 +12,7 @@ import getRawBody from "next/dist/compiled/raw-body/index.js";
 import { composePipeline, isPipeline } from "./util";
 
 const { parse } = contentTypePkg;
-const { default: isError } = isErrorPkg;
+const isError = isErrorPkg;
 
 function parseJson(str: string): object {
 	if (str.length === 0) {
