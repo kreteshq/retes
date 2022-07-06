@@ -3,11 +3,16 @@ import type { Handler, Pipeline, Request } from "./types";
 import type { HTTPMethod } from "./";
 
 import { IncomingMessage } from 'node:http';
+import qs from "querystring";
 import { ApiError } from 'next/dist/server/api-utils/index.js';
-import { parse } from "next/dist/compiled/content-type/index.js";
-import isError from "next/dist/lib/is-error.js";
+import contentTypePkg from "next/dist/compiled/content-type/index.js";
+import isErrorPkg from "next/dist/lib/is-error.js";
+import getRawBody from "next/dist/compiled/raw-body/index.js";
 
 import { composePipeline, isPipeline } from "./util";
+
+const { parse } = contentTypePkg;
+const { default: isError } = isErrorPkg;
 
 function parseJson(str: string): object {
 	if (str.length === 0) {
@@ -37,8 +42,6 @@ export async function parseBody(
 	let buffer
 
 	try {
-		const getRawBody =
-			require('next/dist/compiled/raw-body/index.js');
 		buffer = await getRawBody(req, { encoding, limit })
 	} catch (e) {
 		if (isError(e) && e.type === 'entity.too.large') {
@@ -56,7 +59,6 @@ export async function parseBody(
 			body: parseJson(rawBody)
 		}
 	} else if (type === 'application/x-www-form-urlencoded') {
-		const qs = require('querystring')
 		return {
 			rawBody,
 			body: qs.decode(rawBody)
@@ -75,11 +77,11 @@ const fromNextRequest = async (req: NextApiRequest): Promise<Request> => {
 
 	let bodies;
 
-	if (!req.body) {
+	if (req.body === undefined) {
 		bodies = await parseBody(req, "1mb")
 	}
 
-	const body = req.body || bodies.body;
+	const body = req.body ?? bodies.body;
 	const params = Object.assign({}, body || {}); // to fix the `[Object: null prototype]` warning
 
 	const request: Request = {
