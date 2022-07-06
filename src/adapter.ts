@@ -3,12 +3,11 @@ import type { Handler, Pipeline, Request } from "./types";
 import type { HTTPMethod } from "./";
 
 import { IncomingMessage } from 'node:http';
-import querystring from 'querystring';
 import { ApiError } from 'next/dist/server/api-utils/index.js';
 import { parse } from "next/dist/compiled/content-type/index.js";
-import isError from "next/dist/lib/is-error";
+import isError from "next/dist/lib/is-error.js";
 
-import { isObject, composePipeline, isPipeline } from "./util";
+import { composePipeline, isPipeline } from "./util";
 
 function parseJson(str: string): object {
 	if (str.length === 0) {
