@@ -1,6 +1,6 @@
 import type { BodyInit, HeadersInit } from "./types"
 
-export class Response<O extends BodyInit = BodyInit> {
+export class Response<O = BodyInit> {
 	body: O
 	status: number
 	statusText?: string
@@ -16,7 +16,7 @@ export class Response<O extends BodyInit = BodyInit> {
 	// 2xx
 	//
 	static OK(body: BodyInit = "", headers = {}) {
-		return { body, status: 200, headers };
+		return { body, status: 200, headers }
 	}
 
 	static Created(body: BodyInit = "", headers = {}) {
