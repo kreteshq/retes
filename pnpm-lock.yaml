@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@types/busboy': ^1.5.0
-  '@types/node': ^18.0.3
+  '@types/node': ^18.0.4
   axios: ^0.27.2
   busboy: ^1.6.0
   form-data: ^4.0.0
@@ -19,7 +19,7 @@ dependencies:
 
 devDependencies:
   '@types/busboy': 1.5.0
-  '@types/node': 18.0.3
+  '@types/node': 18.0.4
   axios: 0.27.2
   form-data: 4.0.0
   next: 12.2.2
@@ -183,11 +183,11 @@ packages:
   /@types/busboy/1.5.0:
     resolution: {integrity: sha512-ncOOhwmyFDW76c/Tuvv9MA9VGYUCn8blzyWmzYELcNGDb0WXWLSmFi7hJq25YdRBYJrmMBB5jZZwUjlJe9HCjQ==}
     dependencies:
-      '@types/node': 18.0.3
+      '@types/node': 18.0.4
     dev: true
 
-  /@types/node/18.0.3:
-    resolution: {integrity: sha512-HzNRZtp4eepNitP+BD6k2L6DROIDG4Q0fm4x+dwfsr6LGmROENnok75VGw40628xf+iR24WeMFcHuuBDUAzzsQ==}
+  /@types/node/18.0.4:
+    resolution: {integrity: sha512-M0+G6V0Y4YV8cqzHssZpaNCqvYwlCiulmm0PwpNLF55r/+cT8Ol42CHRU1SEaYFH2rTwiiE1aYg/2g2rrtGdPA==}
     dev: true
 
   /accepts/1.3.8:
@@ -273,8 +273,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /caniuse-lite/1.0.30001365:
-    resolution: {integrity: sha512-VDQZ8OtpuIPMBA4YYvZXECtXbddMCUFJk1qu8Mqxfm/SZJNSr1cy4IuLCOL7RJ/YASrvJcYg1Zh+UEUQ5m6z8Q==}
+  /caniuse-lite/1.0.30001366:
+    resolution: {integrity: sha512-yy7XLWCubDobokgzudpkKux8e0UOOnLHE6mlNJBzT3lZJz6s5atSEzjoL+fsCPkI0G8MP5uVdDx1ur/fXEWkZA==}
     dev: true
 
   /chokidar/3.5.3:
@@ -871,7 +871,7 @@ packages:
     dependencies:
       '@next/env': 12.2.2
       '@swc/helpers': 0.4.2
-      caniuse-lite: 1.0.30001365
+      caniuse-lite: 1.0.30001366
       postcss: 8.4.5
       styled-jsx: 5.0.2
       use-sync-external-store: 1.1.0
@@ -1112,8 +1112,8 @@ packages:
         optional: true
     dev: true
 
-  /sucrase/3.23.0:
-    resolution: {integrity: sha512-xgC1xboStzGhCnRywlBf/DLmkC+SkdAKqrNCDsxGrzM0phR5oUxoFKiQNrsc2D8wDdAm03iLbSZqjHDddo3IzQ==}
+  /sucrase/3.24.0:
+    resolution: {integrity: sha512-SevqflhW356TKEyWjFHg2e5f3eH+5rzmsMJxrVMDvZIEHh/goYrpzDGA6APEj4ME9MdGm8oNgIzi1eF3c3dDQA==}
     engines: {node: '>=8'}
     hasBin: true
     dependencies:
@@ -1200,7 +1200,7 @@ packages:
       resolve-from: 5.0.0
       rollup: 2.76.0
       source-map: 0.8.0-beta.0
-      sucrase: 3.23.0
+      sucrase: 3.24.0
       tree-kill: 1.2.2
       typescript: 4.7.4
     transitivePeerDependencies:
