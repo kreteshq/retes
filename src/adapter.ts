@@ -82,7 +82,10 @@ const fromNextRequest = async (req: NextApiRequest): Promise<Request> => {
 	}
 
 	const body = req.body ?? bodies.body;
-	const params = Object.assign({}, body || {}); // to fix the `[Object: null prototype]` warning
+
+	const { query } = parse(url ?? "", true);
+
+	const params = Object.assign({}, body || {}, query); // to fix the `[Object: null prototype]` warning
 
 	const request: Request = {
 		params,
