@@ -1,4 +1,5 @@
 import type { NextApiHandler, NextApiRequest } from 'next';
+import URL from "url";
 import type { Handler, Pipeline, Request } from "./types";
 import type { HTTPMethod } from "./";
 
@@ -83,7 +84,7 @@ const fromNextRequest = async (req: NextApiRequest): Promise<Request> => {
 
 	const body = req.body ?? bodies.body;
 
-	const { query } = parse(url ?? "", true);
+	const { query } = URL.parse(url ?? "", true);
 
 	const params = Object.assign({}, body || {}, query); // to fix the `[Object: null prototype]` warning
 
