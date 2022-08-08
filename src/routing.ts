@@ -1,23 +1,23 @@
 // Copyright Zaiste. All rights reserved.
 // Licensed under the Apache License, Version 2.0
 
-import querystring from "querystring";
-import { parse } from "url";
-import busboy from "busboy";
+import busboy from 'busboy';
+import querystring from 'querystring';
+import { parse } from 'url';
 
-import { isObject, parseCookies, parseAcceptHeader, toBuffer } from "./util";
-import { Router } from "./router";
+import { Router } from './router';
+import { isObject, parseAcceptHeader, parseCookies, toBuffer } from './util';
 
-import type { Handler, KeyValue, Middleware, Params, Request } from "./types";
+import type { Handler, KeyValue, Middleware, Params, Request } from './types';
 
 export const Routing = (router: Router): Middleware => {
 	return (next: Handler) => async (request: Request) => {
 		const method = request.method;
-		const { pathname, query } = parse(request.url ?? "", true); // TODO Test perf vs RegEx
+		const { pathname, query } = parse(request.url ?? '', true); // TODO Test perf vs RegEx
 
 		const [handler, dynamicRoutes]: [Function, KeyValue[]] = router.find(
 			method,
-			pathname
+			pathname,
 		);
 
 		const params = {} as Params;
@@ -41,19 +41,19 @@ const handleRequest = async (request: Request) => {
 	const { format } = params;
 
 	request.headers = headers;
-	request.cookies = parseCookies(headers.cookie);
+	request.cookies = parseCookies(headers.cookie as string);
 	request.format = format ? format : parseAcceptHeader(headers);
 
 	const buffer = await toBuffer(request.body);
 
 	if (buffer.length > 0) {
-		const contentType = headers["content-type"]?.split(";")[0];
+		const contentType = (headers['content-type'] as string)?.split(';')[0];
 
 		switch (contentType) {
-			case "application/x-www-form-urlencoded":
+			case 'application/x-www-form-urlencoded':
 				Object.assign(params, querystring.parse(buffer.toString()));
 				break;
-			case "application/json": {
+			case 'application/json': {
 				let result;
 
 				try {
@@ -67,15 +67,15 @@ const handleRequest = async (request: Request) => {
 				}
 				break;
 			}
-			case "multipart/form-data": {
+			case 'multipart/form-data': {
 				request.files = {};
 
 				const bb = busboy({ headers });
 
-				bb.on("file", (name, file, info) => {
+				bb.on('file', (name, file, info) => {
 					const { filename, encoding, mimeType } = info;
 
-					file.on("data", (data) => {
+					file.on('data', (data) => {
 						request.files = {
 							...request.files,
 							[name]: {
@@ -87,14 +87,14 @@ const handleRequest = async (request: Request) => {
 							},
 						};
 					});
-					file.on("close", () => { });
+					file.on('close', () => {});
 				});
-				bb.on("field", (name, val) => {
+				bb.on('field', (name, val) => {
 					request.params = { ...request.params, [name]: val };
 				});
 				bb.end(buffer);
 
-				await new Promise((resolve) => bb.on("close", resolve));
+				await new Promise((resolve) => bb.on('close', resolve));
 
 				break;
 			}
