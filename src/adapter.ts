@@ -1,74 +1,74 @@
 import type { NextApiHandler, NextApiRequest } from 'next';
-import URL from "url";
-import type { Handler, Pipeline, Request } from "./types";
-import type { HTTPMethod } from "./";
+import type { HTTPMethod } from './';
+import type { Handler, Pipeline, Request } from './types';
 
-import { IncomingMessage } from 'node:http';
-import qs from "querystring";
+import contentTypePkg from 'next/dist/compiled/content-type/index.js';
+import getRawBody from 'next/dist/compiled/raw-body/index.js';
+import isErrorPkg from 'next/dist/lib/is-error.js';
 import { ApiError } from 'next/dist/server/api-utils/index.js';
-import contentTypePkg from "next/dist/compiled/content-type/index.js";
-import isErrorPkg from "next/dist/lib/is-error.js";
-import getRawBody from "next/dist/compiled/raw-body/index.js";
+import { IncomingMessage } from 'node:http';
+import qs from 'querystring';
+import URL from 'url';
 
-import { composePipeline, isPipeline } from "./util";
+import { composePipeline, isPipeline } from './util';
 
 const { parse } = contentTypePkg;
 const isError = isErrorPkg;
 
 function parseJson(str: string): object {
 	if (str.length === 0) {
-		return {}
+		return {};
 	}
 
 	try {
-		return JSON.parse(str)
+		return JSON.parse(str);
 	} catch (e) {
-		throw new ApiError(400, 'Invalid JSON')
+		throw new ApiError(400, 'Invalid JSON');
 	}
 }
 
 export async function parseBody(
 	req: IncomingMessage,
-	limit: string | number
+	limit: string | number,
 ): Promise<any> {
-	let contentType
+	let contentType;
 	try {
-		contentType = parse(req.headers['content-type'] || 'text/plain')
+		contentType = parse(req.headers['content-type'] || 'text/plain');
 	} catch {
-		contentType = parse('text/plain')
+		contentType = parse('text/plain');
 	}
-	const { type, parameters } = contentType
-	const encoding = parameters.charset || 'utf-8'
+	const { type, parameters } = contentType;
+	const encoding = parameters.charset || 'utf-8';
 
-	let buffer
+	let buffer;
 
 	try {
-		buffer = await getRawBody(req, { encoding, limit })
+		buffer = await getRawBody(req, { encoding, limit });
 	} catch (e) {
 		if (isError(e) && e.type === 'entity.too.large') {
-			throw new ApiError(413, `Body exceeded ${limit} limit`)
+			throw new ApiError(413, `Body exceeded ${limit} limit`);
 		} else {
-			throw new ApiError(400, 'Invalid body')
+			throw new ApiError(400, 'Invalid body');
 		}
 	}
 
-	const rawBody = buffer.toString()
+	const rawBody = buffer.toString();
 
 	if (type === 'application/json' || type === 'application/ld+json') {
 		return {
 			rawBody,
-			body: parseJson(rawBody)
-		}
+			body: parseJson(rawBody),
+		};
 	} else if (type === 'application/x-www-form-urlencoded') {
 		return {
 			rawBody,
-			body: qs.decode(rawBody)
-		}
+			body: qs.decode(rawBody),
+		};
 	} else {
 		return {
 			rawBody,
-			body: rawBody
-		}
+			body: rawBody,
+		};
 	}
 }
 
@@ -79,12 +79,12 @@ const fromNextRequest = async (req: NextApiRequest): Promise<Request> => {
 	let bodies;
 
 	if (req.body === undefined) {
-		bodies = await parseBody(req, "1mb")
+		bodies = await parseBody(req, '1mb');
 	}
 
 	const body = req.body ?? bodies.body;
 
-	const { query } = URL.parse(url ?? "", true);
+	const { query } = URL.parse(url ?? '', true);
 
 	const params = Object.assign({}, body || {}, query); // to fix the `[Object: null prototype]` warning
 
@@ -98,11 +98,11 @@ const fromNextRequest = async (req: NextApiRequest): Promise<Request> => {
 		body: req.body || body,
 		rawBody: bodies?.rawBody,
 		// FIXME
-		response: null
+		response: null,
 	};
 
 	return request;
-}
+};
 
 export const toNextHandler = (flow: Handler | Pipeline): NextApiHandler => {
 	// FIXME handle empty array
@@ -119,5 +119,5 @@ export const toNextHandler = (flow: Handler | Pipeline): NextApiHandler => {
 		}
 
 		res.status(status).send(body);
-	}
-}
+	};
+};

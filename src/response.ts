@@ -1,38 +1,38 @@
-import type { BodyInit, HeadersInit } from "./types"
+import type { BodyInit, HeadersInit } from './types';
 
 export class Response<O extends BodyInit = BodyInit> {
-	body: O
-	status: number
-	statusText?: string
-	headers?: HeadersInit
-	type?: string
-	encoding?: string
+	body: O;
+	status: number;
+	statusText?: string;
+	headers?: HeadersInit;
+	type?: string;
+	encoding?: string;
 
 	constructor(body: O, { status = 200, headers = {} } = {}) {
-		return { body, status, headers, };
+		return { body, status, headers };
 	}
 
 	//
 	// 2xx
 	//
 	static OK<O extends BodyInit>(body: O, headers = {}) {
-		return { body, status: 200, headers }
+		return { body, status: 200, headers };
 	}
 
-	static Created(body: BodyInit = "", headers = {}) {
+	static Created(body: BodyInit = '', headers = {}) {
 		return { body, status: 201, headers };
 	}
 
 	static NotFound(headers = {}) {
-		return { body: "Not Found", status: 404, type: "text/html", headers };
+		return { body: 'Not Found', status: 404, type: 'text/html', headers };
 	}
 
-	static Accepted(body: BodyInit = "", headers = {}) {
+	static Accepted(body: BodyInit = '', headers = {}) {
 		return { body, status: 202, headers };
 	}
 
 	static NoContent(headers = {}) {
-		return { body: "", status: 204, headers };
+		return { body: '', status: 204, headers };
 	}
 
 	//
@@ -41,12 +41,12 @@ export class Response<O extends BodyInit = BodyInit> {
 
 	static Redirect(url: string, status = 302, headers = {}) {
 		return {
-			body: "Redirecting...",
+			body: 'Redirecting...',
 			status,
 			headers: {
 				...headers,
-				Location: url
-			}
+				Location: url,
+			},
 		};
 	}
 
@@ -54,27 +54,27 @@ export class Response<O extends BodyInit = BodyInit> {
 	// 4xx
 	//
 
-	static BadRequest(body: BodyInit = "") {
+	static BadRequest(body: BodyInit = '') {
 		return { body, status: 400 };
 	}
 
 	static Unauthorized() {
-		return { body: "", status: 401 };
+		return { body: '', status: 401 };
 	}
 
-	static Forbidden(body: BodyInit = "") {
+	static Forbidden(body: BodyInit = '') {
 		return { body, status: 403 };
 	}
 
 	static MethodNotAllowed() {
-		return { body: "", status: 405 };
+		return { body: '', status: 405 };
 	}
 
 	static NotAcceptable() {
-		return { body: "", status: 406 };
+		return { body: '', status: 406 };
 	}
 
-	static Conflict(body: BodyInit = "") {
+	static Conflict(body: BodyInit = '') {
 		return { body, status: 409 };
 	}
 
@@ -82,12 +82,10 @@ export class Response<O extends BodyInit = BodyInit> {
 	// 5xx
 	//
 
-	static InternalServerError(body: BodyInit = "", headers = {}) {
+	static InternalServerError(body: BodyInit = '', headers = {}) {
 		return { body, status: 500, headers };
 	}
-
 }
-
 
 export enum Status {
 	Continue = 100,
