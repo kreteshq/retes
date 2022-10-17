@@ -1,6 +1,6 @@
 import type { NextApiHandler, NextApiRequest } from 'next';
 import type { HTTPMethod } from './';
-import type { Handler, Pipeline, Request } from './types';
+import type { Handler, Params, Pipeline, Request } from './types';
 
 import contentTypePkg from 'next/dist/compiled/content-type/index.js';
 import getRawBody from 'next/dist/compiled/raw-body/index.js';
@@ -104,7 +104,7 @@ const fromNextRequest = async (req: NextApiRequest): Promise<Request> => {
 	return request;
 };
 
-export const toNextHandler = (flow: Handler | Pipeline): NextApiHandler => {
+export const toNextHandler = <T = Params>(flow: Handler<T> | Pipeline<T>): NextApiHandler => {
 	// FIXME handle empty array
 	// FIXME handle one element array
 

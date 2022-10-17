@@ -45,8 +45,8 @@ export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 export type Handler<I = Params, O extends BodyInit = BodyInit> = (
 	request: Request<I>,
 ) => MaybePromise<Response<O>>;
-export type Pipeline = [...Middleware[], Handler];
-export type ReversedPipeline = [Handler, ...Middleware[]];
+export type Pipeline<T = Params> = [...Middleware[], Handler<T>];
+export type ReversedPipeline<T = Params> = [Handler<T>, ...Middleware[]];
 
 export interface Meta {
 	summary?: string;
