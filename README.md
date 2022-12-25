@@ -28,72 +28,34 @@ Retes is a routing library for Node.js written in TypeScript and inspired by Clo
 
 ## Usage
 
-Generate a new Node.js project
+Generate a new Retes app using `create-retes-app`. This will set up automatically the required project structure for you.
 
 ```
-mkdir my-api
-cd my-api
-npm init -y
+pnpm create retes-app my-retes-app
+# or
+yarn create retes-app my-retes-app
+# or
+npx create-retes-app@latest my-retes-app
 ```
 
-Add `retes` as a dependency
+Once the project is created, install its dependencies:
 
 ```
-npm i retes
+cd my-retes-app
 ```
 
-Create `tsconfig.json` with the following content:
-
 ```
-{
-  "compilerOptions": {
-    "lib": [ "ES2021", "DOM" ]
-  }
-}
+pnpm install
+# or
+yarn
+# or
+npm install
 ```
 
-Create `app.ts` with the following content:
-
-```ts
-import { ServerApp } from 'retes';
-import { Response } from 'retes/response';
-import { GET, POST } from 'retes/route';
-
-const routes = [
-	GET('/', () => Response.OK('Hello, World')),
-	GET('/welcome/:name', ({ params }) => {
-		return { status: 200, body: `Hello, ${params.name}` };
-	}),
-	POST('/user', ({ params: { name } }) => Response.OK(`Received: '${name}'`)),
-	POST('/widget', ({ params: { name, count } }) => {
-		// validate `params`
-		// save the widget to database ...
-		return Response.Created(); // returns `201 Created` response
-	}),
-];
-
-async function main() {
-	const app = new ServerApp(routes);
-	await app.start(3000);
-
-	console.log('Started');
-}
-
-main();
-```
-
-Save it to a file, e.g. `app.ts`.
-
-Install `tsm`
+Finally, start the application
 
 ```
-npm i --save-dev tsm
-```
-
-Run the application
-
-```
-node -r tsm app.ts
+pnpm start
 ```
 
 The server application listens on the specified port, in our case `:3000`. Open [localhost:3000](http://localhost:3000) and test the routes.
