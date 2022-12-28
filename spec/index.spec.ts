@@ -1,21 +1,21 @@
-import { test } from "uvu";
+import axios, { AxiosInstance } from 'axios';
+import FormData from 'form-data';
+import { test } from 'uvu';
 import * as assert from 'uvu/assert';
-import axios, { AxiosInstance } from "axios";
-import FormData from "form-data";
 
-import { ServerApp } from "../src";
-import { Response } from "../src/response";
-import { GET, POST, PUT, DELETE } from "../src/route";
+import { createMocks } from 'node-mocks-http';
+import { ServerApp } from '../src';
+import { toNextHandler } from '../src/adapter';
 import { asHTML, asJSON } from '../src/middleware';
-import { toNextHandler } from "../src/adapter";
-import { createMocks } from "node-mocks-http";
+import { Response } from '../src/response';
+import { DELETE, GET, POST, PUT } from '../src/route';
 
-import type { Handler, Request, } from "../src/types";
+import type { Handler, Request } from '../src/types';
 
 const ExplicitResponse: Response = {
 	status: 200,
 	headers: {},
-	body: { hello: "Kretes" },
+	body: { hello: 'Kretes' },
 };
 
 const identity = (_) => _;
@@ -23,67 +23,65 @@ const prepend = (handler: Handler) => async (request: Request) => {
 	const r = await handler(request);
 
 	return Response.OK(`Prefix -> ${r.body}`);
-}
+};
 
 const A = (handler: Handler) => async (request: Request) => {
-	request.context.order = [...request.context.order || [], 'pre-A']
+	request.context.order = [...request.context.order || [], 'pre-A'];
 	const r = await handler(request);
 
 	return { ...r, body: `${r.body} - post-A` };
-}
+};
 
 const B = (handler: Handler) => async (request: Request) => {
-	request.context.order = [...request.context.order || [], 'pre-B']
+	request.context.order = [...request.context.order || [], 'pre-B'];
 	const r = await handler(request);
 
 	return { ...r, body: `${r.body} - post-B` };
-}
+};
 
 const C = (handler: Handler) => async (request: Request) => {
-	request.context.order = [...request.context.order || [], 'pre-C']
+	request.context.order = [...request.context.order || [], 'pre-C'];
 	const r = await handler(request);
 
 	return { ...r, body: `${r.body} - post-C` };
-}
+};
 
 //
 // R O U T E S
 //
 
 const GETs = [
-	GET("/", (_) => new Response("Hello, GET!")),
-	GET("/json-explicit-response", (_) => ExplicitResponse),
-	GET("/json-helper-response", [asJSON, (_) => Response.OK({ hello: "Kretes" })]),
-	GET("/json-created-response", [asJSON, (_) => Response.Created({ status: "Created!" })]),
-	GET("/route-params/:name", ({ params }) => Response.OK({ hello: params.name })),
-	GET("/query-params", ({ params: { search } }) => Response.OK({ search })),
-	GET("/html-content", [asHTML, (_) =>
+	GET('/', (_) => new Response('Hello, GET!')),
+	GET('/json-explicit-response', (_) => ExplicitResponse),
+	GET('/json-helper-response', [asJSON, (_) => Response.OK({ hello: 'Kretes' })]),
+	GET('/json-created-response', [asJSON, (_) => Response.Created({ status: 'Created!' })]),
+	GET('/route-params/:name', ({ params }) => Response.OK({ hello: params.name })),
+	GET('/query-params', ({ params: { search } }) => Response.OK({ search })),
+	GET('/html-content', [asHTML, (_) =>
 		Response.OK(
-			"<h1>Retes - Typed, Declarative, Data-Driven Routing for Node.js</h1>"
-		)
-	]),
-	GET("/accept-header-1", ({ format }) => Response.OK(format!)),
-	GET("/explicit-format", ({ format }) => Response.OK(format!)),
+			'<h1>Retes - Typed, Declarative, Data-Driven Routing for Node.js</h1>',
+		)]),
+	GET('/accept-header-1', ({ format }) => Response.OK(format!)),
+	GET('/explicit-format', ({ format }) => Response.OK(format!)),
 ];
 
 const POSTs = [
-	POST("/post-json", ({ params: { name } }) => Response.OK(`Received -> ${name}`)),
-	POST("/post-form", ({ params: { name } }) => Response.OK(`Received -> ${name}`)),
-	POST("/upload", ({ files }) => {
+	POST('/post-json', ({ params: { name } }) => Response.OK(`Received -> ${name}`)),
+	POST('/post-form', ({ params: { name } }) => Response.OK(`Received -> ${name}`)),
+	POST('/upload', ({ files }) => {
 		return Response.OK(`Uploaded -> ${files?.upload.name}`);
 	}),
-	POST("/", (_) => Response.OK("Hello, POST!")),
+	POST('/', (_) => Response.OK('Hello, POST!')),
 ];
 
-const PUTs = [PUT("/", (_) => Response.OK("Hello, PUT!"))];
+const PUTs = [PUT('/', (_) => Response.OK('Hello, PUT!'))];
 
-const DELETEs = [DELETE("/", (_) => Response.OK("Hello, DELETE!"))];
+const DELETEs = [DELETE('/', (_) => Response.OK('Hello, DELETE!'))];
 
 const Compositions = [
-	GET("/simple-compose", (_) => Response.OK("Simple Compose"), { middleware: [identity] }),
-	GET("/prepend-compose", (_) => Response.OK("Prepend Compose"), { middleware: [prepend] }),
-	GET("/A-B-C-order", (_) => Response.OK(`${_.context.order.join(" - ")} - ABC`), { middleware: [A, B, C] }),
-
+	GET('/simple-compose', (_) => Response.OK('Simple Compose'), { middleware: [identity] }),
+	GET('/prepend-compose', (_) => Response.OK('Prepend Compose'), { middleware: [prepend] }),
+	GET('/A-B-C-order', (_) => Response.OK(`${_.context.order.join(' - ')} - ABC`), { middleware: [A, B, C] }),
 ];
 
 const routes = [...GETs, ...POSTs, ...PUTs, ...DELETEs, ...Compositions];
@@ -110,160 +108,160 @@ test.after(async () => {
 // T E S T S
 //
 
-test("the most simple routes", async () => {
-	const { data: d1 } = await http.get("/");
-	assert.is(d1, "Hello, GET!");
+test('the most simple routes', async () => {
+	const { data: d1 } = await http.get('/');
+	assert.is(d1, 'Hello, GET!');
 
-	const { data: d2 } = await http.post("/");
-	assert.is(d2, "Hello, POST!");
+	const { data: d2 } = await http.post('/');
+	assert.is(d2, 'Hello, POST!');
 
-	const { data: d3 } = await http.put("/");
-	assert.is(d3, "Hello, PUT!");
+	const { data: d3 } = await http.put('/');
+	assert.is(d3, 'Hello, PUT!');
 
-	const { data: d4 } = await http.delete("/");
-	assert.is(d4, "Hello, DELETE!");
+	const { data: d4 } = await http.delete('/');
+	assert.is(d4, 'Hello, DELETE!');
 });
 
-test("returns string with implicit return", async () => {
-	const { status, data } = await http.get("/");
+test('returns string with implicit return', async () => {
+	const { status, data } = await http.get('/');
 	assert.is(status, 200);
-	assert.is(data, "Hello, GET!");
+	assert.is(data, 'Hello, GET!');
 });
 
-test("returns json for explicit response", async () => {
-	const { status, data } = await http.get("/json-explicit-response");
+test('returns json for explicit response', async () => {
+	const { status, data } = await http.get('/json-explicit-response');
 	assert.is(status, 200);
-	assert.equal(data, { hello: "Kretes" });
+	assert.equal(data, { hello: 'Kretes' });
 });
 
-test("returns json for `OK` helper response", async () => {
-	const { status, data } = await http.get("/json-helper-response");
+test('returns json for `OK` helper response', async () => {
+	const { status, data } = await http.get('/json-helper-response');
 	assert.is(status, 200);
-	assert.equal(data, { hello: "Kretes" });
+	assert.equal(data, { hello: 'Kretes' });
 });
 
-test("returns json for `created` helper response", async () => {
-	const { status, data, headers } = await http.get("/json-created-response");
+test('returns json for `created` helper response', async () => {
+	const { status, data, headers } = await http.get('/json-created-response');
 	assert.is(status, 201);
-	assert.is(headers["content-type"], "application/json");
-	assert.equal(data, { status: "Created!" });
+	assert.is(headers['content-type'], 'application/json');
+	assert.equal(data, { status: 'Created!' });
 });
 
-test("returns route params", async () => {
-	const { data, status } = await http.get("/route-params/Kretes");
+test('returns route params', async () => {
+	const { data, status } = await http.get('/route-params/Kretes');
 	assert.is(status, 200);
-	assert.equal(data, { hello: "Kretes" });
+	assert.equal(data, { hello: 'Kretes' });
 });
 
-test("returns query params", async () => {
-	const { status, data } = await http.get("/query-params?search=Kretes");
+test('returns query params', async () => {
+	const { status, data } = await http.get('/query-params?search=Kretes');
 	assert.is(status, 200);
-	assert.equal(data, { search: "Kretes" });
+	assert.equal(data, { search: 'Kretes' });
 });
 
-test("returns HTML content", async () => {
-	const { data, status, headers } = await http.get("/html-content");
+test('returns HTML content', async () => {
+	const { data, status, headers } = await http.get('/html-content');
 	assert.is(status, 200);
-	assert.is(headers["content-type"], "text/html");
+	assert.is(headers['content-type'], 'text/html');
 	assert.is(
 		data,
-		"<h1>Retes - Typed, Declarative, Data-Driven Routing for Node.js</h1>"
+		'<h1>Retes - Typed, Declarative, Data-Driven Routing for Node.js</h1>',
 	);
 });
 
-test("respects `Accept` header", async () => {
-	const { data, status } = await http.get("/accept-header-1", {
+test('respects `Accept` header', async () => {
+	const { data, status } = await http.get('/accept-header-1', {
 		headers: {
-			Accept: "text/plain",
+			Accept: 'text/plain',
 		},
 	});
 	assert.is(status, 200);
-	assert.is(data, "plain");
+	assert.is(data, 'plain');
 });
 
-test("respects explicit format query param", async () => {
-	const { data, status } = await http.get("/explicit-format?format=csv");
+test('respects explicit format query param', async () => {
+	const { data, status } = await http.get('/explicit-format?format=csv');
 	assert.is(status, 200);
-	assert.is(data, "csv");
+	assert.is(data, 'csv');
 });
 
-test("accepts POST params as JSON", async () => {
-	const { status, data } = await http.post("/post-json", {
-		name: "Retes via JSON",
+test('accepts POST params as JSON', async () => {
+	const { status, data } = await http.post('/post-json', {
+		name: 'Retes via JSON',
 	});
 	assert.is(status, 200);
-	assert.is(data, "Received -> Retes via JSON");
+	assert.is(data, 'Received -> Retes via JSON');
 });
 
-test("accepts POST params as Form", async () => {
-	const { stringify } = require("querystring");
+test('accepts POST params as Form', async () => {
+	const { stringify } = require('querystring');
 
 	const { status, data } = await http.post(
-		"/post-form",
-		stringify({ name: "Retes via Form" })
+		'/post-form',
+		stringify({ name: 'Retes via Form' }),
 	);
 	assert.is(status, 200);
-	assert.is(data, "Received -> Retes via Form");
+	assert.is(data, 'Received -> Retes via Form');
 });
 
 // Compositions
 
-test("compose functions & return string", async () => {
-	const { status, data } = await http.get("/simple-compose");
+test('compose functions & return string', async () => {
+	const { status, data } = await http.get('/simple-compose');
 	assert.is(status, 200);
-	assert.is(data, "Simple Compose");
+	assert.is(data, 'Simple Compose');
 });
 
-test("compose functions & append string", async () => {
-	const { status, data } = await http.get("/prepend-compose");
+test('compose functions & append string', async () => {
+	const { status, data } = await http.get('/prepend-compose');
 	assert.is(status, 200);
-	assert.is(data, "Prefix -> Prepend Compose");
+	assert.is(data, 'Prefix -> Prepend Compose');
 });
 
-test("compose middleware and their order", async () => {
-	const { status, data } = await http.get("/A-B-C-order");
+test('compose middleware and their order', async () => {
+	const { status, data } = await http.get('/A-B-C-order');
 	assert.is(status, 200);
-	assert.is(data, "pre-A - pre-B - pre-C - ABC - post-C - post-B - post-A");
+	assert.is(data, 'pre-A - pre-B - pre-C - ABC - post-C - post-B - post-A');
 });
 
 // Errors
 
-test("render an error page for a non-existing route", async () => {
+test('render an error page for a non-existing route', async () => {
 	try {
-		await http.get("/route-doesnt-exist-404");
+		await http.get('/route-doesnt-exist-404');
 	} catch (error) {
 		const {
 			response: { status, statusText },
 		} = error;
 		assert.is(status, 404);
-		assert.is(statusText, "Not Found");
+		assert.is(statusText, 'Not Found');
 	}
 });
 
 // Varia
 
-test("receives file upload", async () => {
+test('receives file upload', async () => {
 	const fd = new FormData();
 
-	fd.append("upload", "This is my upload", "foo.csv");
+	fd.append('upload', 'This is my upload', 'foo.csv');
 
 	const options = {
 		headers: fd.getHeaders(),
 	};
 
-	const { status, data } = await http.post("/upload", fd, options);
+	const { status, data } = await http.post('/upload', fd, options);
 	assert.is(status, 200);
-	assert.is(data, "Uploaded -> foo.csv");
+	assert.is(data, 'Uploaded -> foo.csv');
 });
 
 // Adapters
 
-test("Order of middlewares in Next adapter", async () => {
-	const simpleHandler = (request) => Response.OK((request.context.preprocessedBody || "") + "ABC");
+test('Order of middlewares in Next adapter', async () => {
+	const simpleHandler = (request) => Response.OK((request.context.preprocessedBody || '') + 'ABC');
 
 	const middlewaresFactory = (name: string) => {
 		const middleware = (handler: Handler) => async (request: Request) => {
-			request.context.preprocessedBody = (request.context.preprocessedBody || "") + `pre-${name} = `;
+			request.context.preprocessedBody = (request.context.preprocessedBody || '') + `pre-${name} = `;
 			const response = await handler(request);
 			return Response.OK(response.body + ` = post-${name}`);
 		};
@@ -271,9 +269,9 @@ test("Order of middlewares in Next adapter", async () => {
 	};
 
 	const nextHandler = toNextHandler([
-		middlewaresFactory("A"),
-		middlewaresFactory("B"),
-		middlewaresFactory("C"),
+		middlewaresFactory('A'),
+		middlewaresFactory('B'),
+		middlewaresFactory('C'),
 		simpleHandler,
 	]);
 
@@ -281,7 +279,7 @@ test("Order of middlewares in Next adapter", async () => {
 
 	await nextHandler(req, res);
 
-	assert.is(res._getData(), "pre-A = pre-B = pre-C = ABC = post-C = post-B = post-A");
+	assert.is(res._getData(), 'pre-A = pre-B = pre-C = ABC = post-C = post-B = post-A');
 });
 
 // HERE ---

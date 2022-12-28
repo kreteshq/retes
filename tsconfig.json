@@ -1,23 +1,23 @@
 {
-  "compilerOptions": {
-    "target": "es2022",
-    "module": "ES2022",
-    "lib": [
-      "es2021"
-    ],
-    "allowJs": false,
-    "outDir": "dist",
-    "rootDir": "src",
-    "moduleResolution": "node",
-    "baseUrl": ".",
-    "paths": {},
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "sourceMap": false,
-    "declaration": true
-  },
-  "include": [
-    "src/**/*.ts"
-  ]
+	"compilerOptions": {
+		"target": "es2022",
+		"module": "ES2022",
+		"lib": [
+			"es2021"
+		],
+		"allowJs": false,
+		"outDir": "dist",
+		"rootDir": "src",
+		"moduleResolution": "node",
+		"baseUrl": ".",
+		"paths": {},
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
+		"skipLibCheck": true,
+		"sourceMap": false,
+		"declaration": true
+	},
+	"include": [
+		"src/**/*.ts"
+	]
 }

@@ -15,10 +15,7 @@ export const Routing = (router: Router): Middleware => {
 		const method = request.method;
 		const { pathname, query } = parse(request.url ?? '', true); // TODO Test perf vs RegEx
 
-		const [handler, dynamicRoutes]: [Function, KeyValue[]] = router.find(
-			method,
-			pathname,
-		);
+		const [handler, dynamicRoutes]: [Function, KeyValue[]] = router.find(method, pathname);
 
 		const params = {} as Params;
 		for (let r of dynamicRoutes) {
