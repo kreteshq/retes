@@ -12,7 +12,7 @@
 	"scripts": {
 		"prepublishOnly": "pnpm build",
 		"watch": "tsc -w",
-		"build": "tsup-node src/* --format esm,cjs --dts && clear-package-json package.json -o dist/package.json --fields publishConfig",
+		"build": "tsup-node src/* --format esm,cjs --dts --no-splitting && clear-package-json package.json -o dist/package.json --fields publishConfig",
 		"test": "uvu -r tsm spec",
 		"test-watch": "watchlist src spec -- pnpm test"
 	},
