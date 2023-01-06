@@ -1,6 +1,6 @@
 {
 	"name": "retes",
-	"version": "0.35.0",
+	"version": "0.36.0",
 	"description": "Universal HTTP library for Node.js, Deno & Serverless (Cloudflare, Vercel, Netlify)",
 	"types": "dist/index.d.ts",
 	"repository": "github:kreteshq/retes",
