@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 import http from 'http';
+import { Logger } from 'tslog';
 import { handle } from './core';
 import { Response } from './response';
 import { Router } from './router';
@@ -24,6 +25,10 @@ export type HTTPMethod = typeof HTTPMethod[keyof typeof HTTPMethod];
 
 const compose = <T extends CallableFunction, U>(...functions: T[]) => (args: U) =>
 	functions.reduceRight((arg, fn) => fn(arg), args);
+
+const logger = new Logger({
+	prettyLogTemplate: '{{yyyy}}.{{mm}}.{{dd}} {{hh}}:{{MM}}:{{ss}}:{{ms}}\t{{logLevelName}}\t',
+});
 
 export class ServerApp {
 	server: http.Server | undefined;
@@ -146,6 +151,8 @@ export class ServerApp {
 
 		return new Promise<http.Server>((resolve, reject) => {
 			this.server?.listen(port, () => {
+				console.log();
+				logger.info(`Server running on http://127.0.0.1:${port} (Press CTRL+C to quit)`);
 				resolve(this.server);
 			});
 		});
