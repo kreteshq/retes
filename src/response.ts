@@ -85,6 +85,14 @@ export class Response<O extends BodyInit = BodyInit> {
 	static InternalServerError(body: BodyInit = '', headers = {}) {
 		return { body, status: 500, headers };
 	}
+
+	static HTML(body: string, headers = {}) {
+		return {
+			body,
+			status: 200,
+			headers: { ...headers, 'Content-Type': 'text/html; charset=utf-8' },
+		};
+	}
 }
 
 export enum Status {

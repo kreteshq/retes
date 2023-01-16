@@ -3,6 +3,7 @@
 
 import http from 'http';
 import { Logger } from 'tslog';
+import * as Body from './body';
 import { handle } from './core';
 import { Response } from './response';
 import { Router } from './router';
@@ -30,6 +31,10 @@ const logger = new Logger({
 	prettyLogTemplate: '{{yyyy}}.{{mm}}.{{dd}} {{hh}}:{{MM}}:{{ss}}:{{ms}}\t{{logLevelName}}\t',
 });
 
+const defaultErrorHandler = ({ response }: { response: http.ServerResponse }) => (error: Error) => {
+	response.writeHead(500).end(error.message);
+}
+
 export class ServerApp {
 	server: http.Server | undefined;
 	router: Router;
@@ -39,34 +44,27 @@ export class ServerApp {
 	gracefulTerminationTimeout?: number;
 	stop: () => Promise<void>;
 	handleError: (request: Request) => (error: Error) => void;
-	append: (request: Request) => () => void;
-	custom: (
-		request: http.IncomingMessage,
-		response: http.ServerResponse,
-		next: Function,
-	) => void;
 
 	constructor(
 		routes: Routes,
-		middlewares: Middleware[] = [],
-		handleError = ({ response }) => (error) => {
-			response.writeHead(500).end(error.message);
+		options: {
+			middlewares: Middleware[];
+			gracefulTerminationTimeout: number;
+			handleError: ({ response }: { response: http.ServerResponse }) => (error) => void;
+			openapi: {
+				title: string;
+				description: string;
+				version: string;
+			}
 		},
-		append = (context) => () => {},
-		custom = (request, response, next) => {
-			next();
-		},
-		gracefulTerminationTimeout: number = 500,
 	) {
-		this.middlewares = middlewares;
+		this.middlewares = options?.middlewares || [];
 		this.router = new Router();
 		this.routes = routes;
 		this.routePaths = {};
 		this.stop = () => Promise.reject(`You need to start the server first`);
-		this.handleError = handleError;
-		this.append = append;
-		this.custom = custom;
-		this.gracefulTerminationTimeout = gracefulTerminationTimeout;
+		this.handleError = options?.handleError || defaultErrorHandler;
+		this.gracefulTerminationTimeout = options?.gracefulTerminationTimeout || 500;
 
 		// TODO move it to `start` once it's abstracted
 		for (const [path, params] of this.routes) {
@@ -87,6 +85,34 @@ export class ServerApp {
 				// else: a key name undefined in the spec -> discarding
 			}
 		}
+
+		this.add('GET', '/_api.json', () => {
+			return Response.OK(Body.OpenAPI({
+				paths: this.routePaths,
+				...(options?.openapi || {
+					title: 'My Retes API',
+					description: 'This is my Retes API',
+					version: '0.0.1',
+				})
+			}));
+		});
+
+		this.add('GET', '/_api', ({ headers }: Request) => {
+			const type = headers['accept'] as string;
+
+			if (type.startsWith('application/json')) {
+				return Response.OK(Body.OpenAPI({
+					paths: this.routePaths,
+					...(options?.openapi || {
+						title: 'My Retes API',
+						description: 'This is my Retes API',
+						version: '0.0.1',
+					})
+				}));
+			} else {
+				return Response.HTML(Body.Redoc('/_api.json'));
+			}
+		});
 	}
 
 	use(middleware: Middleware) {
@@ -131,10 +157,8 @@ export class ServerApp {
 					(_) => Response.NotFound(),
 				);
 
-				const prepend = (next) => this.custom(request, response, next);
 				pipeline(context)
 					.then(handle(context))
-					.then(this.append(context))
 					.catch(this.handleError(context));
 			})
 			.on('error', (error) => {
